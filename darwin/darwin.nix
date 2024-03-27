@@ -45,23 +45,22 @@
     enable = true;
 
     casks = [
-      "1password"
-      "bartender"
-      "brave-browser"
+      # "1password"
+      # "bartender"
+      # "brave-browser"
       "firefox"
-      "karabiner-elements"
+      # "karabiner-elements"
       "obsidian"
       "raycast"
       "rectangle"
-      "soundsource"
+      # "soundsource"
       "wezterm"
     ];
 
     masApps = {
-      "Drafts" = 1435957248;
-      "Reeder" = 1529448980;
-      "Things" = 904280696;
-      "Timery" = 1425368544;
+      "Macfamilytree-10"  = 1567970985;
+      "Tailscale" = 1475387142;
+      "Amphetamine" = 937984704;
     };
   };
 
