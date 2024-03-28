@@ -45,9 +45,9 @@
           home-manager.darwinModules.home-manager
           {
             home-manager = {
-              users.mabroor_ahmed = import ./home/home.nix;
+              users."mabroor.ahmed" = import ./home/home.nix;
             };
-            users.users.mabroor_ahmed.home = "/Users/mabroor.ahmed";
+            users.users."mabroor.ahmed".home = "/Users/mabroor.ahmed";
           }
         ];
         specialArgs = { inherit inputs; };
