@@ -45,7 +45,7 @@
     enable = true;
 
     casks = [
-      # "1password"
+      "1password"
       # "bartender"
       # "brave-browser"
       "firefox"

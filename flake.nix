@@ -38,7 +38,7 @@
     };
 
     darwinConfigurations = {
-      "G2157QVFX1" = darwin.lib.darwinSystem {
+      "AMAFCXNW09RYR" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
           ./darwin/darwin.nix
