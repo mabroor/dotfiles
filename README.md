@@ -32,3 +32,4 @@ You could use something like this to import my home-manager standalone.
   home-manager.users.evan = import ./home/home.nix;
 }
 ```
+
