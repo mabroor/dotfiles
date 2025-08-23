@@ -44,6 +44,9 @@
       bandwhich  # Network bandwidth monitor
       bottom     # System resource monitor
       zoxide     # Better cd with smart jumping
+      
+      # Secret management
+      agenix     # Age-based secret management CLI
     ];
 
     # Home Manager is pretty good at managing dotfiles. The primary way to manage

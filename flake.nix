@@ -20,6 +20,12 @@
     };
 
     flake-utils.url = "github:numtide/flake-utils";
+    
+    # Secret management
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -30,6 +36,7 @@
     nixpkgs,
     nixpkgs-stable,
     nixpkgs-darwin,
+    agenix,
     ...
   } @ inputs: 
   let

@@ -2,7 +2,7 @@
 { inputs, ... }:
 
 let
-  inherit (inputs) nixpkgs nixpkgs-stable nixpkgs-darwin darwin home-manager;
+  inherit (inputs) nixpkgs nixpkgs-stable nixpkgs-darwin darwin home-manager agenix;
 in
 {
   # Helper function to create a Darwin system configuration
@@ -11,12 +11,14 @@ in
       inherit system;
       modules = [
         ../hosts/${hostname}
+        agenix.darwinModules.default
         home-manager.darwinModules.home-manager
         {
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
             users.${username} = import ../home/home.nix;
+            sharedModules = [ agenix.homeManagerModules.default ];
           };
           users.users.${username}.home = homeDirectory;
         }
@@ -30,12 +32,14 @@ in
       inherit system;
       modules = [
         ../hosts/${hostname}
+        agenix.nixosModules.default
         home-manager.nixosModules.home-manager
         {
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
             users.${username} = import ../home/home.nix;
+            sharedModules = [ agenix.homeManagerModules.default ];
           };
         }
       ];
