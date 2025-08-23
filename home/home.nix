@@ -5,6 +5,7 @@
   imports = [
     ./git.nix
     ./wezterm.nix
+    ./zellij.nix
   ];
 
   home = {
