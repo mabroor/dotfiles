@@ -5,28 +5,33 @@ A comprehensive, modular Nix-based dotfiles repository supporting macOS (Intel a
 ## ✨ Features
 
 ### 🏗️ Architecture
+
 - **Modular Design**: Clean separation of concerns with organized modules
 - **Multi-Platform**: Support for macOS (Intel/Apple Silicon) and NixOS
 - **Declarative Configuration**: Everything is version-controlled and reproducible
 - **Helper Functions**: Simplified system building with reusable components
 
 ### 🛠️ Development Environment
+
 - **Modern CLI Tools**: bat, eza, fd, sd, delta, btop, dust, procs, lazygit, httpie
 - **Terminal Setup**: Zellij multiplexer with Starship prompt
 - **Editor**: Neovim with LazyVim-style configuration and LSP support
 - **Language Support**: Rust, Go, Python, JavaScript/Node.js with comprehensive tooling
 
 ### 🎨 Theming & UI
+
 - **Consistent Theme**: Catppuccin Macchiato across all applications
 - **Font Management**: JetBrains Mono, Monaspace, Nerd Fonts, and system fonts
 - **Terminal Colors**: Coordinated color schemes for all terminal applications
 
 ### 🔒 Security & Secrets
+
 - **Secret Management**: agenix for encrypted secrets with age keys
 - **SSH Configuration**: Comprehensive SSH client setup with security best practices
 - **System Hardening**: Optimized security settings and firewall configuration
 
 ### 🚀 Project Templates
+
 - **Rust**: Complete development environment with Cargo tools and CI
 - **JavaScript/Node.js**: Modern setup with multiple package managers
 - **Python**: Poetry integration with comprehensive tooling
@@ -125,20 +130,24 @@ dotfiles/
 This setup supports multiple machine types:
 
 ### Apple Silicon Mac (aarch64-darwin)
+
 - **Host**: `AMAFCXNW09RYR`
 - **User**: `mabroor.ahmed`
 
 ### Intel Mac (x86_64-darwin)
+
 - **Host**: `Mabroors-MacBook-Pro`
 - **User**: `mabroor`
 
 ### NixOS Linux (x86_64-linux)
+
 - **Host**: `nixos`
 - **User**: `nixos`
 
 ## 📋 Available Commands
 
 ### System Management
+
 ```bash
 # Update flake inputs
 nix flake update
@@ -160,6 +169,7 @@ home-manager switch --flake ~/dotfiles
 ```
 
 ### Development Tools
+
 ```bash
 # Create new projects from templates
 nix flake init -t github:mabroor/dotfiles#rust
@@ -177,6 +187,7 @@ js-project-init my-project react
 ```
 
 ### Utility Scripts
+
 ```bash
 # SSH key management
 ssh-key-setup
@@ -193,24 +204,28 @@ wallpaper random  # macOS only
 ## 🛠️ Development Environments
 
 ### Rust
+
 - Comprehensive Rust toolchain with rust-analyzer
 - Cargo extensions: watch, edit, expand, audit, nextest
 - Cross-compilation and WebAssembly support
 - Project templates with CI/CD setup
 
 ### Go
+
 - Go 1.21 with gopls language server
 - Development tools: air, delve, golangci-lint
 - Database tools: migrate, sqlc
 - Project scaffolding with different architectures
 
 ### Python
+
 - Python 3.11/3.12 with Poetry integration
 - Code quality: Black, Ruff, MyPy, pytest
 - Data science and web frameworks included
 - Virtual environment management
 
 ### JavaScript/Node.js
+
 - Node.js 20 with multiple package managers (npm, yarn, pnpm, bun)
 - TypeScript and modern build tools (Vite, Webpack)
 - Testing frameworks and development utilities
@@ -237,18 +252,21 @@ See [secrets/README.md](secrets/README.md) for detailed instructions.
 ## 🎨 Customization
 
 ### Fonts
+
 The configuration includes a comprehensive font setup:
 - **Programming**: JetBrains Mono, Monaspace, Fira Code, Hack
 - **System**: SF Pro, Inter, Roboto
 - **Icons**: Nerd Fonts, Font Awesome
 
 ### Theming
+
 Consistent Catppuccin Macchiato theme across:
 - Terminal applications (Alacritty, Kitty, WezTerm)
 - CLI tools (bat, fzf, delta)
 - Neovim and development tools
 
 ### macOS System Preferences
+
 Extensive system defaults configuration:
 - Dock behavior and hot corners
 - Finder enhancements
