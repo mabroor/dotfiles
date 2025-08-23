@@ -58,7 +58,7 @@
     "ctre" = "cargo test --release";
     "cf" = "cargo fmt";
     "cfc" = "cargo fmt --check";
-    "cd" = "cargo doc";
+    "cdoc" = "cargo doc";
     "cdo" = "cargo doc --open";
     "cbn" = "cargo bench";
     "cex" = "cargo expand";

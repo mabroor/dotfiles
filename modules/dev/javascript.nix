@@ -75,7 +75,7 @@
     # pnpm aliases
     "pi" = "pnpm install";
     "pr" = "pnpm run";
-    "ps" = "pnpm start";
+    "pstart" = "pnpm start";
     "pt" = "pnpm test";
     "pb" = "pnpm build";
     "pd" = "pnpm dev";

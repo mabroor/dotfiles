@@ -22,11 +22,7 @@
           pip
           setuptools
           wheel
-          poetry
-          black
-          isort
           flake8
-          mypy
           pytest
           pytest-cov
           pytest-xdist
@@ -38,6 +34,10 @@
             python
           ] ++ devDeps ++ (with pkgs; [
             # Development tools
+            poetry        # Package manager
+            black         # Code formatter
+            isort         # Import sorter
+            mypy          # Type checker
             ruff          # Fast Python linter
             pyright       # Python language server
             

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Comprehensive Nix-based dotfiles repository with modular architecture
 - Multi-platform support for macOS (Intel/Apple Silicon) and NixOS
 - Modern CLI tools suite (bat, eza, fd, sd, delta, btop, dust, procs, lazygit, httpie, jless)
@@ -30,11 +31,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive documentation with usage guides
 
 ### Changed
+
 - Updated nixpkgs from release-23.11 to nixos-unstable for latest packages
 - Migrated to modular host structure with host-specific configurations
 - Enhanced existing configurations with modern alternatives and best practices
 
 ### Technical Details
+
 - **Architecture**: Modular design with lib/mkSystem.nix helper functions
 - **Security**: agenix integration with age-based encryption for secrets
 - **CI/CD**: Comprehensive GitHub Actions workflow with template testing
@@ -42,7 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Development**: Language-specific modules with project scaffolding tools
 
 ### Repository Structure
-```
+
+```text
 dotfiles/
 ├── flake.nix              # Main flake configuration
 ├── lib/                   # Helper functions

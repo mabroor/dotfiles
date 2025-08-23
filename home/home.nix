@@ -54,8 +54,7 @@
       bottom     # System resource monitor
       zoxide     # Better cd with smart jumping
       
-      # Secret management
-      agenix     # Age-based secret management CLI
+      # Secret management is handled by the agenix module
     ];
 
     # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -119,7 +118,7 @@
     bat = {
       enable = true;
       config = {
-        theme = "TwoDark";
+        theme = lib.mkDefault "TwoDark";
         pager = "less -FR";
       };
     };

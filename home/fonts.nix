@@ -9,32 +9,25 @@
     nerd-fonts.inconsolata
     nerd-fonts.dejavu-sans-mono
     nerd-fonts.droid-sans-mono
-    nerd-fonts.anonymous-pro
-    nerd-fonts.terminus
     nerd-fonts.space-mono
     
     # Google Fonts
     google-fonts
     
     # Additional programming fonts
-    anonymous-pro
     inconsolata
     fantasque-sans-mono
-    comic-mono
     victor-mono
     
     # Design and display fonts
-    cooper-hewitt
     eb-garamond
     gentium
     lato
     montserrat
-    nunito
-    oswald
-    playfair-display
-    raleway
-    source-sans
-    source-serif
+    roboto
+    roboto-slab
+    source-sans-pro
+    source-serif-pro
     work-sans
   ];
 

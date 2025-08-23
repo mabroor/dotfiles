@@ -19,9 +19,8 @@
           buildInputs = with pkgs; [
             # Node.js and package managers
             nodejs
-            nodePackages.npm
-            nodePackages.yarn
-            nodePackages.pnpm
+            yarn
+            pnpm
             bun
             
             # Development tools
@@ -33,10 +32,6 @@
             
             # Build tools
             nodePackages.webpack-cli
-            nodePackages.vite
-            
-            # Testing
-            nodePackages.jest
             
             # Utilities
             nodePackages.nodemon
@@ -52,7 +47,14 @@
             glibc
           ];
 
+          # Environment variables
+          NODE_ENV = "development";
+          NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+          PNPM_HOME = "$HOME/.local/share/pnpm";
+          
           shellHook = ''
+            export PATH="$HOME/.npm-global/bin:$HOME/.local/share/pnpm:$PATH"
+            
             echo "🚀 JavaScript/Node.js development environment loaded!"
             echo "📦 Node.js version: $(node --version)"
             echo "📦 npm version: $(npm --version)"
@@ -72,16 +74,6 @@
             echo "  npm run build   # Build for production"
             echo "  npm run lint    # Run linter"
             echo "  ncu             # Check for updates"
-          '';
-
-          # Environment variables
-          NODE_ENV = "development";
-          NPM_CONFIG_PREFIX = "$HOME/.npm-global";
-          PNPM_HOME = "$HOME/.local/share/pnpm";
-          
-          # Add npm global packages to PATH
-          shellHook = ''
-            export PATH="$HOME/.npm-global/bin:$HOME/.local/share/pnpm:$PATH"
           '';
         };
 
