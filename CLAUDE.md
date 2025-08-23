@@ -45,28 +45,33 @@ nix flake show
 ### Core Components
 
 **flake.nix** (root): Main entry point defining:
+
 - NixOS configurations for Linux systems
 - Darwin configurations for macOS systems (both Intel and Apple Silicon)
 - System-specific module imports and home-manager integration
 
 **darwin/darwin.nix**: macOS-specific system configuration including:
+
 - Homebrew package management (casks and Mac App Store apps)
 - System defaults (Dock, Finder settings)
 - Nix daemon configuration with flakes enabled
 - Font management (Monaspace, Atkinson Hyperlegible)
 
 **home/**: User-level configurations managed by home-manager:
+
 - **home.nix**: Main home configuration importing other modules
 - **git.nix**: Git configuration with custom aliases and settings
 - **wezterm.nix**: WezTerm terminal configuration
 
 **config/**: Dotfile sources linked by home-manager:
+
 - **git/.gitconfig**: Extensive git aliases and configuration
 - **wezterm/.wezterm.lua**: WezTerm terminal settings
 
 ### System Configurations
 
 The repository supports multiple machine configurations:
+
 - **AMAFCXNW09RYR**: Apple Silicon Mac (aarch64-darwin) with user "mabroor.ahmed"
 - **Mabroors-MacBook-Pro**: Intel Mac (x86_64-darwin) with user "mabroor"
 - **nixos**: Generic NixOS system (x86_64-linux)

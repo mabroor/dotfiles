@@ -97,6 +97,12 @@
           
           src = ./.;
           
+          pyproject = true;
+          
+          build-system = with pythonPackages; [
+            poetry-core
+          ];
+          
           # Dependencies - adjust as needed
           propagatedBuildInputs = with pythonPackages; [
             requests
@@ -150,6 +156,13 @@
           version = "0.1.0";
           
           src = ./.;
+          
+          pyproject = true;
+          
+          build-system = with pythonPackages; [
+            setuptools
+            wheel
+          ];
           
           propagatedBuildInputs = with pythonPackages; [
             # Library dependencies
