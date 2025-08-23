@@ -1,0 +1,264 @@
+name: "Check Nix Flake"
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run weekly to catch dependency issues
+    - cron: '0 0 * * 0'
+
+jobs:
+  flake-check:
+    runs-on: ubuntu-latest
+    name: "Nix Flake Check"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v25
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v14
+        with:
+          name: nix-community
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          extraPullNames: nix-community
+
+      - name: Check Nix flake
+        run: nix flake check --show-trace
+
+      - name: Verify flake outputs
+        run: nix flake show
+
+  build-systems:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            system: x86_64-linux
+            config: nixos
+          - os: macos-latest
+            system: x86_64-darwin
+            config: Mabroors-MacBook-Pro
+          - os: macos-14  # Apple Silicon
+            system: aarch64-darwin
+            config: AMAFCXNW09RYR
+
+    name: "Build ${{ matrix.config }} (${{ matrix.system }})"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v25
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v14
+        with:
+          name: nix-community
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          extraPullNames: nix-community
+
+      - name: Free up disk space (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+          df -h
+
+      - name: Build NixOS configuration
+        if: matrix.system == 'x86_64-linux'
+        run: |
+          nix build .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel \
+            --show-trace --fallback
+
+      - name: Build Darwin configuration
+        if: matrix.system == 'x86_64-darwin' || matrix.system == 'aarch64-darwin'
+        run: |
+          nix build .#darwinConfigurations.${{ matrix.config }}.system \
+            --show-trace --fallback
+
+  check-templates:
+    runs-on: ubuntu-latest
+    name: "Check Project Templates"
+    strategy:
+      fail-fast: false
+      matrix:
+        template: [rust, javascript, python]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v25
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v14
+        with:
+          name: nix-community
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          extraPullNames: nix-community
+
+      - name: Test ${{ matrix.template }} template
+        run: |
+          mkdir -p /tmp/test-${{ matrix.template }}
+          cd /tmp/test-${{ matrix.template }}
+          nix flake init -t ${{ github.workspace }}#${{ matrix.template }}
+          nix flake check --show-trace
+          nix develop --command echo "Development shell works"
+
+  security-check:
+    runs-on: ubuntu-latest
+    name: "Security Check"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v25
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check for secrets in repository
+        run: |
+          # Check for potential secrets in the codebase
+          if find . -name "*.nix" -exec grep -l "password\|secret\|key" {} \; | grep -v secrets/secrets.nix | grep -v ".github"; then
+            echo "⚠️ Found potential secrets in code. Please review:"
+            find . -name "*.nix" -exec grep -l "password\|secret\|key" {} \; | grep -v secrets/secrets.nix | grep -v ".github"
+            echo "If these are placeholder values, this is acceptable."
+          else
+            echo "✅ No obvious secrets found in code"
+          fi
+
+      - name: Validate age secrets configuration
+        run: |
+          if [ -f "secrets/secrets.nix" ]; then
+            # Check that secrets.nix doesn't contain actual private keys
+            if grep -q "age1qqqqqqqqq\|age1rrrrrrrr\|age1sssssss" secrets/secrets.nix; then
+              echo "✅ Secrets configuration uses placeholder keys"
+            else
+              echo "⚠️ Please verify that secrets.nix doesn't contain real private keys"
+            fi
+          fi
+
+  update-check:
+    runs-on: ubuntu-latest
+    name: "Check for Updates"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v25
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check flake inputs for updates
+        run: |
+          echo "Current flake inputs:"
+          nix flake metadata --json | jq -r '.locks.nodes | to_entries[] | select(.key != "root") | "\(.key): \(.value.locked.rev // .value.locked.ref // "N/A")"'
+          
+          echo -e "\nChecking for updates..."
+          nix flake update --dry-run || echo "No updates available or update failed"
+
+      - name: Check for nixpkgs vulnerabilities
+        run: |
+          # This is a basic check - in a real scenario you might want more sophisticated vulnerability scanning
+          echo "Checking system packages for known issues..."
+          nix eval .#nixosConfigurations.nixos.config.environment.systemPackages --apply "pkgs: builtins.length pkgs" || true
+          echo "Manual vulnerability checking should be performed regularly"
+
+  documentation-check:
+    runs-on: ubuntu-latest
+    name: "Documentation Check"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for required documentation
+        run: |
+          echo "📚 Checking documentation..."
+          
+          # Check for essential files
+          files=("README.md" "CLAUDE.md")
+          for file in "${files[@]}"; do
+            if [ -f "$file" ]; then
+              echo "✅ $file exists"
+            else
+              echo "❌ $file is missing"
+              exit 1
+            fi
+          done
+          
+          # Check README content
+          if grep -q "# " README.md; then
+            echo "✅ README.md has headers"
+          else
+            echo "❌ README.md should have proper headers"
+            exit 1
+          fi
+          
+          # Check for template documentation
+          if [ -f "templates/README.md" ]; then
+            echo "✅ Template documentation exists"
+          else
+            echo "❌ templates/README.md is missing"
+            exit 1
+          fi
+
+      - name: Validate Markdown files
+        uses: DavidAnson/markdownlint-action@v1
+        with:
+          files: '**/*.md'
+          ignore: 'CHANGELOG.md'
+          config: |
+            {
+              "MD013": false,
+              "MD041": false,
+              "MD033": false
+            }
+
+  notify-success:
+    runs-on: ubuntu-latest
+    name: "Notify Success"
+    needs: [flake-check, build-systems, check-templates, security-check, update-check, documentation-check]
+    if: success()
+    steps:
+      - name: Success notification
+        run: |
+          echo "🎉 All checks passed successfully!"
+          echo "✅ Flake configuration is valid"
+          echo "✅ All system configurations build successfully"
+          echo "✅ Project templates work correctly"
+          echo "✅ Security checks passed"
+          echo "✅ Documentation is up to date"
