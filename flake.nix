@@ -2,10 +2,15 @@
   description = "Mabroor's Nix System Configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
+    # Primary nixpkgs - using unstable for latest packages
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    
+    # Additional channels for stability and Darwin-specific packages
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
