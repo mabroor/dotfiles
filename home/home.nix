@@ -7,6 +7,7 @@
     ./wezterm.nix
     ./zellij.nix
     ./neovim.nix
+    ./ssh.nix
   ];
 
   home = {
