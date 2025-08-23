@@ -31,58 +31,33 @@
     nixpkgs-stable,
     nixpkgs-darwin,
     ...
-  } @ inputs: {
+  } @ inputs: 
+  let
+    # Import our helper functions
+    inherit (import ./lib/mkSystem.nix { inherit inputs; }) mkDarwin mkNixOS;
+  in
+  {
     nixosConfigurations = {
-      "nixos" = nixpkgs.lib.nixosSystem {
+      nixos = mkNixOS {
+        hostname = "nixos";
         system = "x86_64-linux";
-        modules = [
-          ./hosts/nixos
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.nixos = import ./home/home.nix;
-            };
-          }
-        ];
-        specialArgs = { inherit inputs; };
+        username = "nixos";
       };
     };
 
     darwinConfigurations = {
-      "AMAFCXNW09RYR" = darwin.lib.darwinSystem {
+      AMAFCXNW09RYR = mkDarwin {
+        hostname = "AMAFCXNW09RYR";
         system = "aarch64-darwin";
-        modules = [
-          ./hosts/AMAFCXNW09RYR
-          home-manager.darwinModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users."mabroor.ahmed" = import ./home/home.nix;
-            };
-            users.users."mabroor.ahmed".home = "/Users/mabroor.ahmed";
-          }
-        ];
-        specialArgs = { inherit inputs; };
+        username = "mabroor.ahmed";
+        homeDirectory = "/Users/mabroor.ahmed";
       };
       
-      "Mabroors-MacBook-Pro" = darwin.lib.darwinSystem {
+      Mabroors-MacBook-Pro = mkDarwin {
+        hostname = "Mabroors-MacBook-Pro";
         system = "x86_64-darwin";
-        modules = [
-          ./hosts/Mabroors-MacBook-Pro
-          home-manager.darwinModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.mabroor = import ./home/home.nix;
-            };
-            users.users.mabroor.home = "/Users/mabroor";
-          }
-        ];
-        specialArgs = { inherit inputs; };
+        username = "mabroor";
+        homeDirectory = "/Users/mabroor";
       };
     };
   };
