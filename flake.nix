@@ -27,18 +27,26 @@
     darwin,
     flake-utils,
     home-manager,
+    nixpkgs,
+    nixpkgs-stable,
+    nixpkgs-darwin,
     ...
   } @ inputs: {
     nixosConfigurations = {
-      "nixos" = inputs.nixpkgs.lib.nixosSystem {
+      "nixos" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          ./nixos/configuration.nix
+          ./hosts/nixos
           home-manager.nixosModules.home-manager
           {
-            home-manager.users.nixos = import ./home/home.nix;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.nixos = import ./home/home.nix;
+            };
           }
         ];
+        specialArgs = { inherit inputs; };
       };
     };
 
@@ -46,10 +54,12 @@
       "AMAFCXNW09RYR" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
-          ./darwin/darwin.nix
+          ./hosts/AMAFCXNW09RYR
           home-manager.darwinModules.home-manager
           {
             home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
               users."mabroor.ahmed" = import ./home/home.nix;
             };
             users.users."mabroor.ahmed".home = "/Users/mabroor.ahmed";
@@ -61,10 +71,12 @@
       "Mabroors-MacBook-Pro" = darwin.lib.darwinSystem {
         system = "x86_64-darwin";
         modules = [
-          ./darwin/darwin.nix
+          ./hosts/Mabroors-MacBook-Pro
           home-manager.darwinModules.home-manager
           {
             home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
               users.mabroor = import ./home/home.nix;
             };
             users.users.mabroor.home = "/Users/mabroor";
