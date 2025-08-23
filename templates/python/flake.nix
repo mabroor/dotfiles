@@ -133,22 +133,25 @@
         };
 
         # Alternative: Package with Poetry
-        packages.poetry = pkgs.poetry2nix.mkPoetryApplication {
-          projectDir = ./.;
-          
-          # Override dependencies if needed
-          overrides = pkgs.poetry2nix.overrides.withDefaults (final: prev: {
-            # Example override:
-            # some-package = prev.some-package.overridePythonAttrs (old: {
-            #   buildInputs = old.buildInputs ++ [ final.some-build-dep ];
-            # });
-          });
-          
-          meta = with pkgs.lib; {
-            description = "A Python project built with Poetry";
-            license = licenses.mit;
-          };
-        };
+        # To use poetry2nix, add it as an input:
+        #   inputs.poetry2nix.url = "github:nix-community/poetry2nix";
+        # Then uncomment and use:
+        # packages.poetry = pkgs.poetry2nix.mkPoetryApplication {
+        #   projectDir = ./.;
+        #   
+        #   # Override dependencies if needed
+        #   overrides = pkgs.poetry2nix.overrides.withDefaults (final: prev: {
+        #     # Example override:
+        #     # some-package = prev.some-package.overridePythonAttrs (old: {
+        #     #   buildInputs = old.buildInputs ++ [ final.some-build-dep ];
+        #     # });
+        #   });
+        #   
+        #   meta = with pkgs.lib; {
+        #     description = "A Python project built with Poetry";
+        #     license = licenses.mit;
+        #   };
+        # };
 
         # Python library package
         packages.lib = pythonPackages.buildPythonPackage {
