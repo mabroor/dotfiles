@@ -6,6 +6,7 @@
     ./git.nix
     ./wezterm.nix
     ./zellij.nix
+    ./neovim.nix
   ];
 
   home = {
