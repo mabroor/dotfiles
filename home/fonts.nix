@@ -42,33 +42,16 @@
     work-sans
   ];
 
-  # Font configuration for applications
-  fonts.fontconfig = {
-    enable = true;
-    
-    # Default fonts
-    defaultFonts = {
-      serif = [ "SF Pro Text" "Times New Roman" "Liberation Serif" ];
-      sansSerif = [ "SF Pro Text" "Helvetica Neue" "Liberation Sans" ];
-      monospace = [ "JetBrains Mono" "Monaspace Neon" "SF Mono" "Liberation Mono" ];
-      emoji = [ "Apple Color Emoji" "Noto Color Emoji" ];
-    };
-    
-    # Subpixel rendering
-    subpixel = {
-      rgba = "rgb";
-      lcdfilter = "default";
-    };
-    
-    # Hinting and antialiasing
-    hinting = {
-      enable = true;
-      style = "slight";
-      autohint = false;
-    };
-    
-    antialias = true;
-  };
+  # Font configuration (system-level configuration needed)
+  # Note: fontconfig is not available in home-manager
+  # These settings should be configured at the system level (NixOS or nix-darwin)
+  # For reference, the recommended settings are:
+  # - Default serif: SF Pro Text, Times New Roman, Liberation Serif
+  # - Default sans: SF Pro Text, Helvetica Neue, Liberation Sans  
+  # - Default mono: JetBrains Mono, Monaspace Neon, SF Mono
+  # - Subpixel rendering: RGB with default LCD filter
+  # - Hinting: slight with autohint disabled
+  # - Antialiasing: enabled
 
   # Configure terminal fonts in various applications
   programs.alacritty.settings = lib.mkIf config.programs.alacritty.enable {

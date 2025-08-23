@@ -127,7 +127,9 @@
     # Configure eza (better ls)  
     eza = {
       enable = true;
-      enableAliases = false; # We set our own aliases above
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableZshIntegration = false;
     };
 
     # Configure fzf

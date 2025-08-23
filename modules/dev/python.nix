@@ -10,17 +10,17 @@
     
     # Package managers and virtual environment tools
     python311Packages.pip       # Package installer
-    python311Packages.pipx      # Install Python apps in isolated environments
-    python311Packages.poetry    # Modern dependency management
+    pipx                         # Install Python apps in isolated environments
+    poetry                       # Modern dependency management
     python311Packages.virtualenv # Virtual environment creator
-    python311Packages.pipenv    # Higher-level interface to pip and virtualenv
+    pipenv                       # Higher-level interface to pip and virtualenv
     
     # Development tools
-    python311Packages.black     # Code formatter
-    python311Packages.isort     # Import sorter
+    black                        # Code formatter
+    isort                        # Import sorter
     python311Packages.flake8    # Linting
-    python311Packages.mypy      # Static type checking
-    python311Packages.pylint    # Comprehensive linting
+    mypy                         # Static type checking
+    pylint                       # Comprehensive linting
     python311Packages.autopep8  # PEP 8 formatter
     ruff                        # Fast Python linter (Rust-based)
     
@@ -41,9 +41,8 @@
     python311Packages.mkdocs   # Documentation site generator
     
     # Debugging and profiling
-    python311Packages.pdb-clone # Enhanced debugger
-    python311Packages.memory-profiler # Memory usage profiler
-    python311Packages.py-spy    # Sampling profiler
+    python311Packages.ipdb      # Enhanced debugger with IPython
+    py-spy                       # Sampling profiler
     
     # Popular libraries for data science and web development
     python311Packages.requests # HTTP library

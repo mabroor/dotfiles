@@ -22,7 +22,6 @@
     cargo-criterion  # Benchmarking tool
     cargo-flamegraph # Profiling tool
     cargo-bloat      # Find what takes most space in binary
-    cargo-tree       # Display dependency tree
     cargo-update     # Update installed executables
     cargo-generate   # Generate projects from templates
     bacon            # Background rust code checker
@@ -56,7 +55,7 @@
     "crr" = "cargo run --release";
     "ct" = "cargo test";
     "ctv" = "cargo test -- --nocapture";
-    "ctr" = "cargo test --release";
+    "ctre" = "cargo test --release";
     "cf" = "cargo fmt";
     "cfc" = "cargo fmt --check";
     "cd" = "cargo doc";
@@ -383,7 +382,7 @@
           - uses: actions/checkout@v4
           - uses: dtolnay/rust-toolchain@master
             with:
-              toolchain: ${{ matrix.rust }}
+              toolchain: ''${{ matrix.rust }}
           - uses: Swatinem/rust-cache@v2
           - name: Run tests
             run: cargo test --verbose
@@ -418,7 +417,7 @@
           - uses: actions/checkout@v4
           - uses: rustsec/audit-check@v1.4.1
             with:
-              token: ${{ secrets.GITHUB_TOKEN }}
+              token: ''${{ secrets.GITHUB_TOKEN }}
       EOF
       fi
       

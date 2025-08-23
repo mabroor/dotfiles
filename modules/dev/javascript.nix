@@ -4,8 +4,7 @@
 {
   home.packages = with pkgs; [
     # Node.js runtime and package managers
-    nodejs_20        # Node.js LTS
-    npm              # Node package manager
+    nodejs_20        # Node.js LTS (includes npm)
     yarn             # Alternative package manager
     pnpm             # Fast, disk space efficient package manager
     bun              # Fast all-in-one JavaScript runtime
@@ -20,27 +19,17 @@
     
     # Build tools and bundlers
     nodePackages.webpack-cli            # Webpack bundler
-    nodePackages.vite                   # Fast build tool
-    nodePackages.parcel                 # Zero-config bundler
     
-    # Testing frameworks
-    nodePackages.jest                   # JavaScript testing framework
-    nodePackages.vitest                 # Vite-native test runner
+    # Testing frameworks (install locally per project)
     
     # Utilities
     nodePackages.nodemon                # Development file watcher
     nodePackages.concurrently          # Run multiple commands
-    nodePackages.cross-env              # Cross-platform environment variables
     nodePackages.npm-check-updates      # Check for outdated dependencies
     
-    # React development
-    nodePackages.create-react-app       # React project bootstrapper
+    # Framework CLIs (install globally as needed)
     
-    # Vue development
-    nodePackages."@vue/cli"             # Vue CLI
     
-    # Angular development  
-    nodePackages."@angular/cli"         # Angular CLI
     
     # Svelte development
     nodePackages.svelte-language-server # Svelte LSP
@@ -50,14 +39,10 @@
     
     # Deployment tools
     nodePackages.vercel                 # Vercel CLI
-    nodePackages.netlify-cli            # Netlify CLI
     
     # Documentation
     nodePackages.jsdoc                 # JavaScript documentation generator
     
-    # Package analysis
-    nodePackages.npm-check             # Check npm dependencies
-    nodePackages.depcheck              # Check unused dependencies
   ];
 
   # Shell aliases for JavaScript development

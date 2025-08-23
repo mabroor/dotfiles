@@ -4,13 +4,13 @@
 {
   home.packages = with pkgs; [
     # Go compiler and tools
-    go_1_21          # Go 1.21 (latest stable)
+    go               # Go compiler (latest stable)
     
     # Development tools
     gopls            # Go language server
     golangci-lint    # Fast Go linters runner
     gofumpt          # Stricter gofmt
-    goimports        # Tool to fix Go imports
+    gotools          # Various Go tools (includes goimports)
     gomodifytags     # Go tool to modify struct field tags
     gotests          # Generate tests for Go code
     golines          # Go formatter that shortens long lines
@@ -20,7 +20,6 @@
     go-tools         # Additional Go tools (staticcheck, etc.)
     
     # Code generation
-    stringer         # Generate String method for enums
     protobuf         # Protocol Buffers compiler
     protoc-gen-go    # Go plugin for protobuf compiler
     protoc-gen-go-grpc # Go gRPC plugin for protobuf compiler

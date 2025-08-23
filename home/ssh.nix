@@ -15,6 +15,7 @@
     hashKnownHosts = true;
     forwardAgent = false;
     
+    
     # Host configurations
     matchBlocks = {
       # GitHub
@@ -23,7 +24,6 @@
         user = "git";
         identityFile = "~/.ssh/id_ed25519";
         identitiesOnly = true;
-        addKeysToAgent = "yes";
       };
 
       # GitLab
@@ -32,7 +32,6 @@
         user = "git";
         identityFile = "~/.ssh/id_ed25519";
         identitiesOnly = true;
-        addKeysToAgent = "yes";
       };
 
       # Example work server
@@ -42,7 +41,6 @@
         port = 22;
         identityFile = "~/.ssh/id_work";
         identitiesOnly = true;
-        addKeysToAgent = "yes";
         # Uncomment and configure as needed
         # proxyJump = "bastion.work.example.com";
         # localForwards = [
@@ -61,7 +59,6 @@
         port = 2222;
         identityFile = "~/.ssh/id_personal";
         identitiesOnly = true;
-        addKeysToAgent = "yes";
       };
 
       # Development VMs pattern
@@ -69,7 +66,6 @@
         user = "developer";
         identityFile = "~/.ssh/id_dev";
         identitiesOnly = true;
-        addKeysToAgent = "yes";
         extraOptions = {
           "StrictHostKeyChecking" = "no";
           "UserKnownHostsFile" = "/dev/null";
@@ -100,8 +96,6 @@
 
       # Default fallback for all hosts
       "*" = {
-        addKeysToAgent = "yes";
-        useKeychain = lib.mkIf pkgs.stdenv.isDarwin true;
         serverAliveInterval = 60;
         serverAliveCountMax = 3;
         extraOptions = {
@@ -116,6 +110,9 @@
       # Additional SSH client options
       Include ~/.ssh/config.local
       
+      # SSH agent configuration
+      AddKeysToAgent yes
+      
       # Security enhancements
       Protocol 2
       Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
@@ -126,15 +123,12 @@
       # Performance optimizations
       IPQoS throughput
       TCPKeepAlive yes
-    '';
-  };
-
-  # SSH agent configuration (Darwin-specific)
-  programs.ssh = lib.mkIf pkgs.stdenv.isDarwin {
-    extraConfig = ''
-      # macOS-specific SSH agent configuration
-      IgnoreUnknown UseKeychain
-      UseKeychain yes
+      
+      ${lib.optionalString pkgs.stdenv.isDarwin ''
+        # macOS-specific SSH agent configuration
+        IgnoreUnknown UseKeychain
+        UseKeychain yes
+      ''}
     '';
   };
 
