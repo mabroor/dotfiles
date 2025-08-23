@@ -12,10 +12,36 @@
 
     # The home.packages option allows you to install Nix packages into your
     # environment.
-    packages = [
-      pkgs.marksman
-      pkgs.nixd
-      pkgs.ripgrep
+    packages = with pkgs; [
+      # Nix tooling
+      marksman
+      nixd
+
+      # Modern CLI tools
+      ripgrep    # Better grep
+      bat        # Better cat with syntax highlighting
+      eza        # Better ls with colors and icons
+      fd         # Better find
+      sd         # Better sed
+      delta      # Better git diff
+      btop       # Better htop with more features
+      dust       # Disk usage analyzer
+      procs      # Better ps with colors
+      lazygit    # Terminal UI for git
+      httpie     # Better curl for APIs
+      jless      # JSON viewer for terminal
+
+      # File and text processing
+      jq         # JSON processor
+      yq         # YAML/XML processor
+      fzf        # Fuzzy finder
+      tree       # Directory tree viewer
+      tldr       # Simplified man pages
+
+      # Network and system tools
+      bandwhich  # Network bandwidth monitor
+      bottom     # System resource monitor
+      zoxide     # Better cd with smart jumping
     ];
 
     # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -41,6 +67,27 @@
         set fish_greeting # N/A
       '';
 
+      shellAliases = {
+        # Modern CLI tool aliases
+        ls = "eza --icons";
+        ll = "eza -l --icons --git";
+        la = "eza -la --icons --git";
+        tree = "eza --tree --icons";
+        cat = "bat --paging=never";
+        find = "fd";
+        grep = "rg";
+        
+        # Git aliases
+        g = "git";
+        lg = "lazygit";
+        
+        # Other useful aliases
+        top = "btop";
+        du = "dust";
+        ps = "procs";
+        cd = "z"; # Use zoxide for smart jumping
+      };
+
       plugins = [
         {
           name = "nix-env";
@@ -54,9 +101,41 @@
       ];
     };
 
+    # Configure bat (better cat)
+    bat = {
+      enable = true;
+      config = {
+        theme = "TwoDark";
+        pager = "less -FR";
+      };
+    };
+
+    # Configure eza (better ls)  
+    eza = {
+      enable = true;
+      enableAliases = false; # We set our own aliases above
+    };
+
+    # Configure fzf
+    fzf = {
+      enable = true;
+      enableFishIntegration = true;
+      defaultCommand = "fd --type f";
+      defaultOptions = [
+        "--height 50%"
+        "--border"
+        "--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+      ];
+    };
+
+    # Configure zoxide (better cd)
+    zoxide = {
+      enable = true;
+      enableFishIntegration = true;
+    };
+
     direnv = {
       enable = true;
-
       nix-direnv.enable = true;
     };
 
