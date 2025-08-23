@@ -71,6 +71,17 @@ in
             end
           end
         end
+        
+        # Rust/Cargo environment setup
+        # Rustup installs to ~/.cargo/bin by default
+        if test -d $HOME/.cargo
+          set -gx CARGO_HOME "$HOME/.cargo"
+          set -gx RUSTUP_HOME "$HOME/.rustup"
+          fish_add_path -gP "$CARGO_HOME/bin"
+          
+          # Set Rust-specific environment variables
+          set -gx RUST_BACKTRACE 1  # Enable backtraces for better debugging
+        end
       '';
       
       # Shell aliases for common operations
@@ -91,6 +102,14 @@ in
         gc = "git commit";
         gp = "git push";
         gl = "git log --oneline --graph";
+        
+        # Rust/Cargo aliases
+        cb = "cargo build";
+        cr = "cargo run";
+        ct = "cargo test";
+        cc = "cargo check";
+        cf = "cargo fmt";
+        clippy = "cargo clippy";
       };
       
       # Fish plugins
@@ -139,6 +158,40 @@ in
             end
           end
         '';
+        
+        # Function to quickly setup a new Rust project
+        rust-init = ''
+          function rust-init
+            if test (count $argv) -eq 0
+              echo "Usage: rust-init <project-name> [--lib]"
+              return 1
+            end
+            
+            set project_name $argv[1]
+            
+            if test "$argv[2]" = "--lib"
+              cargo new --lib $project_name
+            else
+              cargo new $project_name
+            end
+            
+            cd $project_name
+            echo "Rust project initialized in $project_name"
+          end
+        '';
+        
+        # Function to update Rust toolchain
+        rust-update = ''
+          function rust-update
+            if command -v rustup > /dev/null
+              echo "Updating Rust toolchain..."
+              rustup update
+              echo "Rust toolchain updated successfully"
+            else
+              echo "rustup not found. Install it from https://rustup.rs"
+            end
+          end
+        '';
       };
     };
     
@@ -164,6 +217,19 @@ in
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
         [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+        
+        # Rust/Cargo environment setup
+        if [ -d "$HOME/.cargo" ]; then
+          export CARGO_HOME="$HOME/.cargo"
+          export RUSTUP_HOME="$HOME/.rustup"
+          export PATH="$CARGO_HOME/bin:$PATH"
+          
+          # Set Rust-specific environment variables
+          export RUST_BACKTRACE=1  # Enable backtraces for better debugging
+          
+          # Source cargo env if it exists (for rustup completions)
+          [ -s "$CARGO_HOME/env" ] && \. "$CARGO_HOME/env"
+        fi
         
         # Set default editor
         export EDITOR="${if config.programs.neovim.enable then "nvim" else "vim"}"
@@ -197,6 +263,14 @@ in
         gc = "git commit";
         gp = "git push";
         gl = "git log --oneline --graph";
+        
+        # Rust/Cargo aliases
+        cb = "cargo build";
+        cr = "cargo run";
+        ct = "cargo test";
+        cc = "cargo check";
+        cf = "cargo fmt";
+        clippy = "cargo clippy";
       };
     };
     
@@ -257,6 +331,12 @@ in
     gnumake          # Make build tool
     gcc              # C/C++ compiler
     
+    # Rust development tools
+    # Note: rustup itself manages the Rust toolchain, but we include useful tools
+    rustup           # Rust toolchain installer and version manager
+    pkg-config       # Helper tool for compiling applications (needed by many Rust crates)
+    openssl          # SSL/TLS toolkit (commonly needed for Rust projects)
+    
     # Version control
     gh               # GitHub CLI (as seen in history)
   ] ++ lib.optionals isLinux [
@@ -278,6 +358,11 @@ in
     
     # Development environment variables
     NODE_ENV = "development";  # Default Node environment
+    
+    # Rust environment variables
+    CARGO_HOME = "$HOME/.cargo";
+    RUSTUP_HOME = "$HOME/.rustup";
+    RUST_BACKTRACE = "1";  # Enable backtraces for better debugging
   };
   
   # Shell-related dotfiles
