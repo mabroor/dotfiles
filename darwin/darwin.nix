@@ -35,7 +35,11 @@
     fontDir.enable = true;
     fonts = with pkgs; [
       # Programming fonts
-      (nerdfonts.override { fonts = [ "JetBrainsMono" "FiraCode" "Hack" "SourceCodePro" "UbuntuMono" ]; })
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.fira-code
+      nerd-fonts.hack
+      nerd-fonts.sauce-code-pro
+      nerd-fonts.ubuntu-mono
       monaspace
       jetbrains-mono
       fira-code

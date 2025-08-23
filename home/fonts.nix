@@ -4,18 +4,14 @@
 {
   # Additional fonts managed by home-manager
   home.packages = with pkgs; [
-    # Additional Nerd Fonts not covered by system
-    (nerdfonts.override { 
-      fonts = [ 
-        "Meslo" 
-        "Inconsolata" 
-        "DejaVuSansMono"
-        "DroidSansMono"
-        "AnonymousPro"
-        "Terminus"
-        "SpaceMono"
-      ]; 
-    })
+    # Individual Nerd Fonts (new structure)
+    nerd-fonts.meslo-lg
+    nerd-fonts.inconsolata
+    nerd-fonts.dejavu-sans-mono
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.anonymous-pro
+    nerd-fonts.terminus
+    nerd-fonts.space-mono
     
     # Google Fonts
     google-fonts

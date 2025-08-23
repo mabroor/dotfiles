@@ -237,16 +237,9 @@ jobs:
           fi
 
       - name: Validate Markdown files
-        uses: DavidAnson/markdownlint-action@v1
+        uses: davidanson/markdownlint-cli2-action@v18
         with:
-          files: '**/*.md'
-          ignore: 'CHANGELOG.md'
-          config: |
-            {
-              "MD013": false,
-              "MD041": false,
-              "MD033": false
-            }
+          globs: '**/*.md'
 
   notify-success:
     runs-on: ubuntu-latest
