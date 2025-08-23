@@ -64,6 +64,7 @@ dotfiles/
 This represents a complete rewrite and modernization of the previous dotfiles setup. Previous versions included basic macOS and NixOS configurations with minimal tooling.
 
 ### Migration Notes
+
 - Users upgrading from previous versions should backup their current configurations
 - The new modular structure requires updating host-specific configurations
 - Secret management now uses agenix instead of plain text files

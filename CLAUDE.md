@@ -11,6 +11,7 @@ This is a Nix-based dotfiles repository for managing development environment con
 ### Bootstrap and Update Commands
 
 **Darwin/macOS:**
+
 ```bash
 # Initial bootstrap (from remote)
 nix run nix-darwin -- switch --flake github:mabroor/dotfiles
@@ -20,6 +21,7 @@ darwin-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
 ```
 
 **NixOS:**
+
 ```bash
 # Update system configuration
 sudo nixos-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
