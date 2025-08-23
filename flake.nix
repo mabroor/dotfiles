@@ -67,5 +67,26 @@
         homeDirectory = "/Users/mabroor";
       };
     };
+
+    # Project templates for quick development setup
+    templates = {
+      rust = {
+        path = ./templates/rust;
+        description = "Rust project with comprehensive development environment";
+      };
+      
+      javascript = {
+        path = ./templates/javascript;
+        description = "JavaScript/Node.js project with modern tooling";
+      };
+      
+      python = {
+        path = ./templates/python;
+        description = "Python project with development and packaging setup";
+      };
+      
+      # Default template
+      default = self.templates.rust;
+    };
   };
 }
