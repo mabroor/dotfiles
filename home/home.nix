@@ -8,6 +8,12 @@
     ./zellij.nix
     ./neovim.nix
     ./ssh.nix
+    
+    # Development environments
+    ../modules/dev/javascript.nix
+    ../modules/dev/python.nix
+    ../modules/dev/go.nix
+    ../modules/dev/rust.nix
   ];
 
   home = {
