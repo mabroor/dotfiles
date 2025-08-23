@@ -8,6 +8,8 @@
     ./zellij.nix
     ./neovim.nix
     ./ssh.nix
+    ./fonts.nix
+    ./theme.nix
     
     # Development environments
     ../modules/dev/javascript.nix

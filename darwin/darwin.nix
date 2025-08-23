@@ -31,11 +31,39 @@
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
 
-  fonts.fontDir.enable = true;
-  fonts.fonts = [
-    pkgs.monaspace
-    pkgs.atkinson-hyperlegible
-  ];
+  fonts = {
+    fontDir.enable = true;
+    fonts = with pkgs; [
+      # Programming fonts
+      (nerdfonts.override { fonts = [ "JetBrainsMono" "FiraCode" "Hack" "SourceCodePro" "UbuntuMono" ]; })
+      monaspace
+      jetbrains-mono
+      fira-code
+      fira-code-symbols
+      source-code-pro
+      hack-font
+      ubuntu_font_family
+      cascadia-code
+      
+      # System fonts
+      atkinson-hyperlegible
+      inter
+      roboto
+      roboto-mono
+      open-sans
+      liberation_ttf
+      
+      # Iconic and symbol fonts
+      font-awesome
+      material-design-icons
+      
+      # Apple fonts (if available)
+      sf-pro
+      sf-compact
+      sf-mono
+      ny-font
+    ];
+  };
 
   services = {
 
