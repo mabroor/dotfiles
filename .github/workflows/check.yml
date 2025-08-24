@@ -15,7 +15,7 @@ jobs:
     name: "Nix Flake Check"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
         uses: cachix/install-nix-action@v25
@@ -61,7 +61,7 @@ jobs:
   #   name: "Build ${{ matrix.config }} (${{ matrix.system }})"
   #   steps:
   #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+  #       uses: actions/checkout@v5
   #
   #     - name: Install Nix
   #       uses: cachix/install-nix-action@v25
@@ -110,7 +110,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
         uses: cachix/install-nix-action@v25
@@ -140,7 +140,7 @@ jobs:
     name: "Security Check"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
         uses: cachix/install-nix-action@v25
@@ -177,7 +177,7 @@ jobs:
     name: "Check for Updates"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
         uses: cachix/install-nix-action@v25
@@ -207,7 +207,7 @@ jobs:
     name: "Documentation Check"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check for required documentation
         run: |
