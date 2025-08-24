@@ -19,6 +19,7 @@ This directory contains encrypted secrets managed by [agenix](https://github.com
    - Add or remove keys as needed for your setup
 
 3. **Create encrypted secrets**:
+
    ```bash
    # Install agenix
    nix profile install github:ryantm/agenix
@@ -36,6 +37,7 @@ This directory contains encrypted secrets managed by [agenix](https://github.com
 ## Usage in Configuration
 
 ### System-level secrets (NixOS):
+
 ```nix
 {
   age.secrets.ssh-key = {

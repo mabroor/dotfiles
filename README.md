@@ -51,11 +51,13 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 #### Initial Bootstrap
 
 **For macOS (Darwin):**
+
 ```bash
 nix run nix-darwin -- switch --flake github:mabroor/dotfiles
 ```
 
 **For NixOS:**
+
 ```bash
 # Add this flake to your NixOS configuration
 sudo nixos-rebuild switch --flake github:mabroor/dotfiles#nixos
@@ -71,13 +73,13 @@ sudo nixos-rebuild switch --flake github:mabroor/dotfiles#nixos
    ```
 
 2. **Update your system:**
-   
+
    **macOS:**
 
    ```bash
    darwin-rebuild switch --flake ~/dotfiles
    ```
-   
+
    **NixOS:**
 
    ```bash
@@ -260,6 +262,7 @@ See [secrets/README.md](secrets/README.md) for detailed instructions.
 ### Fonts
 
 The configuration includes a comprehensive font setup:
+
 - **Programming**: JetBrains Mono, Monaspace, Fira Code, Hack
 - **System**: SF Pro, Inter, Roboto
 - **Icons**: Nerd Fonts, Font Awesome
@@ -267,6 +270,7 @@ The configuration includes a comprehensive font setup:
 ### Theming
 
 Consistent Catppuccin Macchiato theme across:
+
 - Terminal applications (Alacritty, Kitty, WezTerm)
 - CLI tools (bat, fzf, delta)
 - Neovim and development tools
@@ -274,6 +278,7 @@ Consistent Catppuccin Macchiato theme across:
 ### macOS System Preferences
 
 Extensive system defaults configuration:
+
 - Dock behavior and hot corners
 - Finder enhancements
 - Keyboard and trackpad optimization
