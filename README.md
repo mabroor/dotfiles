@@ -38,59 +38,155 @@ A comprehensive, modular Nix-based dotfiles repository supporting macOS (Intel a
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### Fresh Install / New VM Setup
 
-Install Nix using the [Determinate Systems Installer](https://github.com/DeterminateSystems/nix-installer):
+Starting from a completely fresh system or new VM? Follow these steps:
+
+#### Step 1: Install Nix
+
+Install Nix using the [Determinate Systems Installer](https://github.com/DeterminateSystems/nix-installer) (recommended for flakes support):
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 ```
 
-### Installation
+**Note:** This installer automatically enables flakes and nix-command experimental features.
 
-#### Initial Bootstrap
+#### Step 2: Initial System Bootstrap
 
-**For macOS (Darwin):**
+##### For macOS (Darwin):
+
+1. **Run the bootstrap command directly from GitHub:**
+
+   ```bash
+   nix run nix-darwin -- switch --flake github:mabroor/dotfiles#HOSTNAME
+   ```
+
+   Replace `HOSTNAME` with:
+   - `AMAFCXNW09RYR` for Apple Silicon Mac with user `mabroor.ahmed`
+   - `Mabroors-MacBook-Pro` for Intel Mac with user `mabroor`
+
+2. **Restart your terminal** or source your shell configuration:
+
+   ```bash
+   exec $SHELL
+   ```
+
+3. **Verify the installation:**
+
+   ```bash
+   darwin-rebuild --version
+   ```
+
+##### For NixOS:
+
+1. **During NixOS installation**, add this to your `/etc/nixos/configuration.nix`:
+
+   ```nix
+   {
+     nix.settings.experimental-features = [ "nix-command" "flakes" ];
+   }
+   ```
+
+2. **After initial NixOS installation, run:**
+
+   ```bash
+   sudo nixos-rebuild switch --flake github:mabroor/dotfiles#nixos
+   ```
+
+3. **Restart your system** to ensure all changes take effect.
+
+##### For Linux (non-NixOS) with Home Manager only:
+
+1. **Install Home Manager standalone:**
+
+   ```bash
+   nix run home-manager/master -- init --switch --flake github:mabroor/dotfiles#USER
+   ```
+
+   Replace `USER` with your username.
+
+#### Step 3: Clone for Local Development
+
+After the initial bootstrap, clone the repository for local modifications:
 
 ```bash
-nix run nix-darwin -- switch --flake github:mabroor/dotfiles
+# Create source directory structure
+mkdir -p ~/src/github.com/mabroor
+
+# Clone the repository
+git clone https://github.com/mabroor/dotfiles.git ~/src/github.com/mabroor/dotfiles
+
+# Navigate to the repository
+cd ~/src/github.com/mabroor/dotfiles
 ```
 
-**For NixOS:**
+#### Step 4: Verify Installation
+
+Run these commands to ensure everything is working:
 
 ```bash
-# Add this flake to your NixOS configuration
-sudo nixos-rebuild switch --flake github:mabroor/dotfiles#nixos
+# Check Nix version and flakes
+nix --version
+nix flake show
+
+# Test a development environment
+nix develop -c echo "Development environment works!"
+
+# Check available templates
+nix flake show --json | jq '.templates'
 ```
 
-#### Local Development
+### Updating Your Configuration
 
-1. **Clone the repository:**
+Once you have the repository cloned locally:
 
-   ```bash
-   git clone https://github.com/mabroor/dotfiles.git ~/dotfiles
-   cd ~/dotfiles
-   ```
+#### macOS:
 
-2. **Update your system:**
+```bash
+darwin-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
+```
 
-   **macOS:**
+#### NixOS:
 
-   ```bash
-   darwin-rebuild switch --flake ~/dotfiles
-   ```
+```bash
+sudo nixos-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
+```
 
-   **NixOS:**
+#### Home Manager (standalone):
 
-   ```bash
-   sudo nixos-rebuild switch --flake ~/dotfiles
-   ```
+```bash
+home-manager switch --flake ~/src/github.com/mabroor/dotfiles
+```
 
-3. **Apply home-manager configuration:**
+### Troubleshooting Fresh Installs
 
-   ```bash
-   home-manager switch --flake ~/dotfiles
-   ```
+#### Common Issues:
+
+1. **"command not found: darwin-rebuild"**
+   - Ensure you've restarted your terminal after the initial bootstrap
+   - Run `exec $SHELL` to reload your shell
+
+2. **"experimental feature 'flakes' is disabled"**
+   - The Determinate Systems installer should enable this automatically
+   - If not, add to `~/.config/nix/nix.conf`:
+
+     ```
+     experimental-features = nix-command flakes
+     ```
+
+3. **Permission denied errors on macOS**
+   - Ensure the Nix daemon is running: `sudo launchctl list | grep nix`
+   - Restart the daemon if needed: `sudo launchctl stop org.nixos.nix-daemon && sudo launchctl start org.nixos.nix-daemon`
+
+4. **"error: flake does not provide attribute"**
+   - Check that you're using the correct hostname in the flake reference
+   - List available configurations: `nix flake show github:mabroor/dotfiles`
+
+5. **Homebrew packages not installing (macOS)**
+   - The first run may need to install Homebrew itself
+   - Run `darwin-rebuild switch` again after Homebrew installs
+   - Check Homebrew installation: `brew --version`
 
 ## 📁 Repository Structure
 
