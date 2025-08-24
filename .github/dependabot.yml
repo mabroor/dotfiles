@@ -1,0 +1,22 @@
+version: 2
+updates:
+  # Monitor GitHub Actions for updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+
+  # Monitor Nix flake inputs (if supported in the future)
+  # For now, manual updates via nix flake update are recommended
+  # - package-ecosystem: "nix"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"

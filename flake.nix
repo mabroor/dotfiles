@@ -2,10 +2,15 @@
   description = "Mabroor's Nix System Configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
+    # Primary nixpkgs - using unstable for latest packages
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    
+    # Additional channels for stability and Darwin-specific packages
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -15,6 +20,12 @@
     };
 
     flake-utils.url = "github:numtide/flake-utils";
+    
+    # Secret management
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -22,51 +33,60 @@
     darwin,
     flake-utils,
     home-manager,
+    nixpkgs,
+    nixpkgs-stable,
+    nixpkgs-darwin,
+    agenix,
     ...
-  } @ inputs: {
+  } @ inputs: 
+  let
+    # Import our helper functions
+    inherit (import ./lib/mkSystem.nix { inherit inputs; }) mkDarwin mkNixOS;
+  in
+  {
     nixosConfigurations = {
-      "nixos" = inputs.nixpkgs.lib.nixosSystem {
+      nixos = mkNixOS {
+        hostname = "nixos";
         system = "x86_64-linux";
-        modules = [
-          ./nixos/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.users.nixos = import ./home/home.nix;
-          }
-        ];
+        username = "nixos";
       };
     };
 
     darwinConfigurations = {
-      "AMAFCXNW09RYR" = darwin.lib.darwinSystem {
+      AMAFCXNW09RYR = mkDarwin {
+        hostname = "AMAFCXNW09RYR";
         system = "aarch64-darwin";
-        modules = [
-          ./darwin/darwin.nix
-          home-manager.darwinModules.home-manager
-          {
-            home-manager = {
-              users."mabroor.ahmed" = import ./home/home.nix;
-            };
-            users.users."mabroor.ahmed".home = "/Users/mabroor.ahmed";
-          }
-        ];
-        specialArgs = { inherit inputs; };
+        username = "mabroor.ahmed";
+        homeDirectory = "/Users/mabroor.ahmed";
       };
       
-      "Mabroors-MacBook-Pro" = darwin.lib.darwinSystem {
+      Mabroors-MacBook-Pro = mkDarwin {
+        hostname = "Mabroors-MacBook-Pro";
         system = "x86_64-darwin";
-        modules = [
-          ./darwin/darwin.nix
-          home-manager.darwinModules.home-manager
-          {
-            home-manager = {
-              users.mabroor = import ./home/home.nix;
-            };
-            users.users.mabroor.home = "/Users/mabroor";
-          }
-        ];
-        specialArgs = { inherit inputs; };
+        username = "mabroor";
+        homeDirectory = "/Users/mabroor";
       };
+    };
+
+    # Project templates for quick development setup
+    templates = {
+      rust = {
+        path = ./templates/rust;
+        description = "Rust project with comprehensive development environment";
+      };
+      
+      javascript = {
+        path = ./templates/javascript;
+        description = "JavaScript/Node.js project with modern tooling";
+      };
+      
+      python = {
+        path = ./templates/python;
+        description = "Python project with development and packaging setup";
+      };
+      
+      # Default template
+      default = self.templates.rust;
     };
   };
 }
