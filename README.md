@@ -337,5 +337,3 @@ If you encounter issues:
 4. Create a new issue with the provided template
 
 ---
-
-**Happy hacking! 🚀**
