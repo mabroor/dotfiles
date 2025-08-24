@@ -5,6 +5,7 @@ This directory contains Nix flake templates for quick project initialization wit
 ## Available Templates
 
 ### Rust Template
+
 ```bash
 nix flake init -t github:mabroor/dotfiles#rust
 # or
@@ -12,13 +13,15 @@ nix flake new my-rust-project -t github:mabroor/dotfiles#rust
 ```
 
 Features:
+
 - Rust stable toolchain with rust-analyzer, clippy, and rust-src
 - Development tools: bacon, cargo-watch, cargo-edit, cargo-expand
 - Testing tools: cargo-nextest
 - Profiling: cargo-flamegraph
 - Cross-platform dependencies (macOS and Linux support)
 
-### JavaScript/Node.js Template  
+### JavaScript/Node.js Template
+
 ```bash
 nix flake init -t github:mabroor/dotfiles#javascript
 # or
@@ -26,6 +29,7 @@ nix flake new my-js-project -t github:mabroor/dotfiles#javascript
 ```
 
 Features:
+
 - Node.js 20 with multiple package managers (npm, yarn, pnpm, bun)
 - TypeScript and language server support
 - Development tools: Prettier, ESLint, Vite, Webpack
@@ -33,6 +37,7 @@ Features:
 - Utilities: nodemon, npm-check-updates
 
 ### Python Template
+
 ```bash
 nix flake init -t github:mabroor/dotfiles#python
 # or  
@@ -40,6 +45,7 @@ nix flake new my-python-project -t github:mabroor/dotfiles#python
 ```
 
 Features:
+
 - Python 3.11 with Poetry support
 - Code quality tools: Black, isort, Ruff, MyPy
 - Testing: pytest with coverage

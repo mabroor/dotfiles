@@ -36,7 +36,7 @@ This directory contains encrypted secrets managed by [agenix](https://github.com
 
 ## Usage in Configuration
 
-### System-level secrets (NixOS):
+### System-level secrets (NixOS)
 
 ```nix
 {
@@ -49,7 +49,8 @@ This directory contains encrypted secrets managed by [agenix](https://github.com
 }
 ```
 
-### User-level secrets (home-manager):
+### User-level secrets (home-manager)
+
 ```nix
 {
   age.secrets.github-token = {
