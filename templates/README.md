@@ -55,6 +55,7 @@ Features:
 ## Usage
 
 1. **Create a new project from template:**
+
    ```bash
    mkdir my-project
    cd my-project
@@ -62,6 +63,7 @@ Features:
    ```
 
 2. **Enter the development environment:**
+
    ```bash
    nix develop
    ```
