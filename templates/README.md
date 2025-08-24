@@ -72,6 +72,7 @@ Features:
 ## Template Structure
 
 Each template includes:
+
 - `flake.nix` - Nix flake with development shell and package definitions
 - Development dependencies and tools
 - Environment variables and shell hooks
@@ -81,6 +82,7 @@ Each template includes:
 ## Customization
 
 After initializing a template:
+
 1. Update the package name and metadata in `flake.nix`
 2. Adjust dependencies based on your project needs  
 3. Modify shell hooks and environment variables
