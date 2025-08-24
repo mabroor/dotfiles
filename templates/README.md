@@ -90,6 +90,7 @@ After initializing a template:
 ## Local Development
 
 When developing these templates locally:
+
 ```bash
 # Test a template locally
 nix flake init -t .#rust
