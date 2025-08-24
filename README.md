@@ -98,13 +98,190 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 
 ##### For Linux (non-NixOS) with Home Manager only:
 
-1. **Install Home Manager standalone:**
+This section covers setting up this repository on fresh Linux VMs or systems that aren't running NixOS (e.g., Ubuntu, Debian, Fedora, CentOS, etc.).
+
+###### Prerequisites
+
+1. **Ensure your system is up to date:**
 
    ```bash
-   nix run home-manager/master -- init --switch --flake github:mabroor/dotfiles#USER
+   # Debian/Ubuntu
+   sudo apt update && sudo apt upgrade -y
+   
+   # Fedora
+   sudo dnf update -y
+   
+   # RHEL/CentOS/AlmaLinux
+   sudo yum update -y
    ```
 
-   Replace `USER` with your username.
+2. **Install required dependencies:**
+
+   ```bash
+   # Debian/Ubuntu
+   sudo apt install -y curl git xz-utils
+   
+   # Fedora
+   sudo dnf install -y curl git xz
+   
+   # RHEL/CentOS/AlmaLinux
+   sudo yum install -y curl git xz
+   ```
+
+3. **Create a user (if using root or need a new user):**
+
+   ```bash
+   # Create a new user with home directory
+   sudo useradd -m -s /bin/bash USERNAME
+   sudo passwd USERNAME
+   
+   # Add to sudo group (optional)
+   # Debian/Ubuntu
+   sudo usermod -aG sudo USERNAME
+   
+   # Fedora/RHEL/CentOS
+   sudo usermod -aG wheel USERNAME
+   
+   # Switch to the new user
+   su - USERNAME
+   ```
+
+###### Step 1: Install Nix
+
+After installing Nix (see Step 1 above), you need to ensure it's properly configured for your Linux distribution:
+
+1. **Enable systemd service (if using systemd):**
+
+   ```bash
+   # The Determinate Systems installer should do this automatically
+   # But you can verify with:
+   systemctl --user status nix-daemon
+   ```
+
+2. **SELinux considerations (RHEL/Fedora/CentOS):**
+
+   If SELinux is enabled, you may need to adjust policies:
+
+   ```bash
+   # Check SELinux status
+   sestatus
+   
+   # If needed, set Nix store to permissive (temporary)
+   sudo semanage fcontext -a -t bin_t '/nix/store(/.*)?'
+   sudo restorecon -Rv /nix
+   ```
+
+###### Step 2: Configure Home Manager Standalone
+
+1. **Create necessary directories:**
+
+   ```bash
+   mkdir -p ~/.config/nix
+   mkdir -p ~/.config/home-manager
+   ```
+
+2. **Bootstrap Home Manager with this configuration:**
+
+   ```bash
+   # First, add Home Manager channel
+   nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+   nix-channel --update
+   
+   # Install Home Manager
+   nix-shell '<home-manager>' -A install
+   ```
+
+3. **Apply this dotfiles configuration:**
+
+   ```bash
+   # Clone the repository first
+   git clone https://github.com/mabroor/dotfiles.git ~/src/github.com/mabroor/dotfiles
+   
+   # Create a custom home configuration for your Linux user
+   cd ~/src/github.com/mabroor/dotfiles
+   
+   # Switch to the configuration
+   home-manager switch --flake .#nixos
+   ```
+
+   Note: The `nixos` configuration in this flake is generic. You may want to create a custom configuration for your specific user.
+
+###### Step 3: Create a Custom Linux Configuration (Optional)
+
+If you want a personalized configuration for your Linux VM:
+
+1. **Create a new host configuration:**
+
+   ```bash
+   # In your cloned dotfiles repo
+   mkdir -p hosts/my-linux-vm
+   ```
+
+2. **Create `hosts/my-linux-vm/default.nix`:**
+
+   ```nix
+   { config, pkgs, ... }:
+   {
+     # Your custom Linux-specific configuration
+     home.username = "YOUR_USERNAME";
+     home.homeDirectory = "/home/YOUR_USERNAME";
+   }
+   ```
+
+3. **Update `flake.nix` to include your configuration:**
+
+   Add to the `homeConfigurations` section:
+
+   ```nix
+   homeConfigurations = {
+     "YOUR_USERNAME@my-linux-vm" = home-manager.lib.homeManagerConfiguration {
+       pkgs = nixpkgs.legacyPackages.x86_64-linux;
+       modules = [
+         ./home/home.nix
+         ./hosts/my-linux-vm
+       ];
+     };
+   };
+   ```
+
+4. **Apply your custom configuration:**
+
+   ```bash
+   home-manager switch --flake .#YOUR_USERNAME@my-linux-vm
+   ```
+
+###### Linux-Specific Considerations
+
+1. **GUI Applications:**
+   - Most GUI applications from this config won't work in SSH sessions
+   - For GUI support, ensure X11 forwarding is enabled: `ssh -X user@host`
+
+2. **Font Installation:**
+   - Fonts are managed by Home Manager but may need font cache refresh:
+
+     ```bash
+     fc-cache -fv
+     ```
+
+3. **Shell Integration:**
+   - Add to your `.bashrc` or `.profile`:
+
+     ```bash
+     # Source Nix
+     if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
+       . ~/.nix-profile/etc/profile.d/nix.sh
+     fi
+     
+     # Switch to fish if available
+     if command -v fish &> /dev/null; then
+       exec fish
+     fi
+     ```
+
+4. **Container/VM Considerations:**
+   - Ensure adequate disk space (at least 10GB for Nix store)
+   - If in Docker/Podman, use `--init` flag for proper signal handling
+   - For WSL2, ensure systemd is enabled in `/etc/wsl.conf`
 
 #### Step 3: Clone for Local Development
 
@@ -187,6 +364,44 @@ home-manager switch --flake ~/src/github.com/mabroor/dotfiles
    - The first run may need to install Homebrew itself
    - Run `darwin-rebuild switch` again after Homebrew installs
    - Check Homebrew installation: `brew --version`
+
+#### Linux-Specific Troubleshooting:
+
+1. **"error: cannot connect to daemon"**
+   - Ensure the Nix daemon is running: `sudo systemctl status nix-daemon`
+   - Start it if needed: `sudo systemctl start nix-daemon`
+   - For non-systemd systems, check if daemon is running: `ps aux | grep nix-daemon`
+
+2. **"error: getting status of '/nix/var/nix/db': Permission denied"**
+   - This usually means Nix wasn't installed correctly
+   - Re-run the installer with proper permissions
+   - Ensure your user is in the `nixbld` group: `groups $USER`
+
+3. **Home Manager command not found**
+   - Source the Nix profile: `. ~/.nix-profile/etc/profile.d/nix.sh`
+   - Update channels: `nix-channel --update`
+   - Re-install Home Manager: `nix-shell '<home-manager>' -A install`
+
+4. **SELinux blocking Nix operations (RHEL/Fedora)**
+   - Check SELinux denials: `sudo ausearch -m avc -ts recent`
+   - Temporarily set to permissive: `sudo setenforce 0`
+   - Create permanent policy if needed (consult SELinux documentation)
+
+5. **Locale issues (LC_ALL/LANG errors)**
+   - Install locale packages: `sudo apt install locales` (Debian/Ubuntu)
+   - Generate locales: `sudo locale-gen en_US.UTF-8`
+   - Set in shell: `export LANG=en_US.UTF-8`
+
+6. **Out of disk space in /nix/store**
+   - Check disk usage: `df -h /nix`
+   - Clean old generations: `nix-collect-garbage -d`
+   - Remove old Home Manager generations: `home-manager generations | head -5`
+   - Then remove: `home-manager remove-generations [IDs]`
+
+7. **Fish shell not starting automatically**
+   - Ensure fish is in allowed shells: `grep fish /etc/shells`
+   - If not, add it: `echo "$(which fish)" | sudo tee -a /etc/shells`
+   - Change default shell: `chsh -s $(which fish)`
 
 ## 📁 Repository Structure
 
