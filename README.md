@@ -64,6 +64,7 @@ sudo nixos-rebuild switch --flake github:mabroor/dotfiles#nixos
 #### Local Development
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/mabroor/dotfiles.git ~/dotfiles
    cd ~/dotfiles
@@ -72,23 +73,26 @@ sudo nixos-rebuild switch --flake github:mabroor/dotfiles#nixos
 2. **Update your system:**
    
    **macOS:**
+
    ```bash
    darwin-rebuild switch --flake ~/dotfiles
    ```
    
    **NixOS:**
+
    ```bash
    sudo nixos-rebuild switch --flake ~/dotfiles
    ```
 
 3. **Apply home-manager configuration:**
+
    ```bash
    home-manager switch --flake ~/dotfiles
    ```
 
 ## 📁 Repository Structure
 
-```
+```text
 dotfiles/
 ├── flake.nix              # Main flake configuration
 ├── lib/                   # Helper functions
@@ -236,6 +240,7 @@ wallpaper random  # macOS only
 This configuration uses [agenix](https://github.com/ryantm/agenix) for secret management:
 
 1. **Generate age keys:**
+
    ```bash
    age-keygen -o ~/.config/age/keys.txt
    ```
@@ -243,6 +248,7 @@ This configuration uses [agenix](https://github.com/ryantm/agenix) for secret ma
 2. **Update secrets.nix** with your public keys
 
 3. **Create encrypted secrets:**
+
    ```bash
    agenix -e secret-name.age
    ```
