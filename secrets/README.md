@@ -5,6 +5,7 @@ This directory contains encrypted secrets managed by [agenix](https://github.com
 ## Setup
 
 1. **Generate age keys** for each user and system:
+
    ```bash
    # For personal use
    age-keygen -o ~/.config/age/keys.txt
