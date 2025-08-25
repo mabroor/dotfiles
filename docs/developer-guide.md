@@ -210,6 +210,7 @@ programs.toolname = {
    ```
 
 3. **Register template** in main `flake.nix`:
+
    ```nix
    templates = {
      # existing templates...

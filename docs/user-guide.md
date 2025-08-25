@@ -39,6 +39,7 @@ Your default shell is **Fish** with modern enhancements:
 Your configuration includes many helpful aliases. Here are the most important ones:
 
 #### File Operations
+
 ```bash
 ls          # → eza --icons (better ls with colors and icons)
 ll          # → eza -l --icons --git (detailed list with git status)
@@ -48,17 +49,20 @@ cat         # → bat --paging=never (syntax highlighted cat)
 ```
 
 #### Navigation
+
 ```bash
 cd          # → z (smart directory jumping with zoxide)
 find        # → fd (faster, user-friendly find)
 ```
 
 #### Text and Search
+
 ```bash
 grep        # → rg (ripgrep - faster grep with better defaults)
 ```
 
 #### System Monitoring
+
 ```bash
 top         # → btop (beautiful system monitor)
 du          # → dust (disk usage analyzer)
@@ -86,6 +90,7 @@ Your system includes modern replacements for traditional Unix tools:
 Your git configuration includes powerful aliases and modern tools:
 
 #### Essential Git Aliases
+
 ```bash
 g           # → git
 lg          # → lazygit (terminal UI for git)
@@ -103,9 +108,11 @@ git last    # → git log -1 HEAD
 ```
 
 #### Git Tools
+
 - **lazygit** - Interactive terminal UI for git operations
 - **delta** - Better git diff with syntax highlighting
 - Automatic HTTPS → SSH conversion for GitHub
+
 
 ## Development Environments
 
@@ -114,11 +121,13 @@ Your configuration includes pre-configured development environments for multiple
 ### JavaScript/Node.js
 
 **Available Tools:**
+
 - Node.js 20 LTS, npm, yarn, pnpm, bun
 - TypeScript, Prettier, ESLint
 - Development servers and build tools
 
 **Useful Aliases:**
+
 ```bash
 # npm shortcuts
 ni          # → npm install
@@ -139,6 +148,7 @@ pd          # → pnpm dev
 ```
 
 **Project Creation:**
+
 ```bash
 js-project-init my-app react    # Create React project
 js-project-init my-api node     # Create Node.js project
@@ -148,12 +158,14 @@ package-json-gen               # Generate package.json with common scripts
 ### Rust
 
 **Available Tools:**
+
 - Complete Rust toolchain (rustc, cargo, clippy, rustfmt)
 - cargo-watch, cargo-edit, cargo-audit
 - WebAssembly tools (wasm-pack)
 - Debugging and profiling tools
 
 **Useful Aliases:**
+
 ```bash
 c           # → cargo
 cb          # → cargo build  
@@ -167,6 +179,7 @@ cwatch      # → cargo watch
 ```
 
 **Project Creation:**
+
 ```bash
 rust-project-init my-project bin        # Create binary project
 rust-project-init my-lib lib           # Create library project  
@@ -176,6 +189,7 @@ rust-project-init my-workspace workspace # Create workspace
 ### Python
 
 **Available Tools:**
+
 - Python 3.11, pip, poetry, black, ruff
 - Development and data science libraries
 - Virtual environment management
@@ -183,6 +197,7 @@ rust-project-init my-workspace workspace # Create workspace
 ### Go
 
 **Available Tools:**
+
 - Go compiler and tools
 - Popular Go development utilities
 
@@ -195,11 +210,13 @@ Your fzf configuration includes:
 - **Ctrl+T** - Find files in current directory
 - **Alt+C** - Change to subdirectory
 
+
 Preview integration with bat for file previews.
 
 ### Directory Navigation (zoxide)
 
 Zoxide learns your navigation patterns:
+
 ```bash
 z docs          # Jump to any directory containing "docs"
 z dev proj      # Jump to directories matching both "dev" and "proj"
@@ -209,6 +226,7 @@ zi             # Interactive directory selection
 ### File Management
 
 #### File Viewing
+
 ```bash
 bat file.txt    # View file with syntax highlighting
 bat -n file.txt # View with line numbers
@@ -216,6 +234,7 @@ bat -A file.txt # Show all characters including whitespace
 ```
 
 #### Directory Listing
+
 ```bash
 eza            # Basic listing with icons
 eza -l         # Detailed listing
@@ -225,6 +244,7 @@ eza -l --git   # Show git status
 ```
 
 #### Search and Find
+
 ```bash
 fd pattern     # Find files/directories matching pattern
 fd -e rs       # Find files with .rs extension
@@ -238,21 +258,25 @@ rg --type rust "pattern" # Search only in Rust files
 ### Updating Your Configuration
 
 **macOS (Darwin):**
+
 ```bash
 darwin-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
 ```
 
 **NixOS:**
+
 ```bash
 sudo nixos-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
 ```
 
 ### Updating Packages
+
 ```bash
 nix flake update    # Update all package inputs
 ```
 
 ### Checking Configuration
+
 ```bash
 nix flake check     # Validate configuration
 nix flake show      # Show available configurations
@@ -265,6 +289,7 @@ nix flake show      # Show available configurations
 1. Edit `home/home.nix` and add packages to the `home.packages` list
 2. Rebuild your configuration
 3. New tools will be available immediately
+
 
 ### Adding Shell Aliases
 
@@ -279,21 +304,25 @@ Each tool has its own configuration file in the `home/` directory:
 - `wezterm.nix` - Terminal configuration  
 - `neovim.nix` - Editor configuration
 
+
 ## Getting Help
 
 ### Built-in Help
+
 ```bash
 tldr command    # Simplified man pages
 command --help  # Most tools have help flags
 ```
 
 ### Documentation
+
 ```bash
 man command     # Traditional manual pages
 info command    # GNU info documents (where available)
 ```
 
 ### Exploration
+
 ```bash
 which command   # Find where a command is installed
 type command    # Show what a command alias resolves to
@@ -321,6 +350,7 @@ If something breaks:
 1. Check the last working configuration in git history
 2. Roll back using `darwin-rebuild --rollback` or similar
 3. Edit configuration files to fix issues
+
 
 ## Next Steps
 

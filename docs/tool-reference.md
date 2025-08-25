@@ -7,6 +7,7 @@ This reference guide provides comprehensive information about all the tools inst
 ### Package Managers & Environments
 
 #### Nix
+
 Your primary package manager and configuration system.
 
 ```bash
@@ -23,6 +24,7 @@ nix develop                   # Enter development shell
 ```
 
 #### Direnv
+
 Automatic environment loading per directory.
 
 ```bash
@@ -35,6 +37,7 @@ direnv reload                 # Reload environment
 ### Shell and Terminal
 
 #### Fish Shell
+
 Your default shell with modern features.
 
 ```bash
@@ -49,6 +52,7 @@ history delete --prefix cmd   # Delete commands starting with 'cmd'
 ```
 
 #### WezTerm
+
 Your terminal emulator (configured via `home/wezterm.nix`).
 
 ```bash
@@ -62,6 +66,7 @@ Ctrl+PageUp/PageDown         # Switch tabs
 ### Modern CLI Tools
 
 #### eza (Better ls)
+
 Enhanced file listing with colors, icons, and git integration.
 
 ```bash
@@ -83,6 +88,7 @@ tree                         # → eza --tree --icons
 ```
 
 #### bat (Better cat)
+
 Syntax-highlighted file viewer with line numbers.
 
 ```bash
@@ -100,6 +106,7 @@ export BAT_STYLE="numbers,changes,header" # Set style
 ```
 
 #### ripgrep (Better grep)
+
 Fast text search tool with smart defaults.
 
 ```bash
@@ -118,6 +125,7 @@ rg "pattern" --replace "replacement" # Search and replace preview
 ```
 
 #### fd (Better find)
+
 User-friendly file finder with intuitive syntax.
 
 ```bash
@@ -134,6 +142,7 @@ fd --exclude "*.log" pattern # Exclude files matching pattern
 ```
 
 #### zoxide (Better cd)
+
 Smart directory jumping that learns your patterns.
 
 ```bash
@@ -149,6 +158,7 @@ cd pattern                   # Same as 'z pattern'
 ```
 
 #### fzf (Fuzzy Finder)
+
 Interactive fuzzy finder for files, command history, and more.
 
 ```bash
@@ -170,6 +180,7 @@ fzf --preview 'bat {}'       # Preview files with bat
 ### System Monitoring
 
 #### btop (Better top)
+
 Beautiful and feature-rich system monitor.
 
 ```bash
@@ -186,6 +197,7 @@ n                           # Show/hide network graph
 ```
 
 #### dust (Better du)
+
 Visual disk usage analyzer.
 
 ```bash
@@ -198,6 +210,7 @@ dust -s                      # Summarize, don't show tree
 ```
 
 #### procs (Better ps)
+
 Modern process viewer with colors and additional information.
 
 ```bash
@@ -212,6 +225,7 @@ procs --sort memory          # Sort by memory usage
 ### Network and System Tools
 
 #### httpie
+
 User-friendly HTTP client for APIs.
 
 ```bash
@@ -225,6 +239,7 @@ http --form POST api.example.com file@path  # File upload
 ```
 
 #### jq & jless
+
 JSON processing and viewing tools.
 
 ```bash
@@ -239,6 +254,7 @@ curl api.example.com | jless # View API response
 ```
 
 #### bandwhich
+
 Network bandwidth monitor by process.
 
 ```bash
@@ -252,6 +268,7 @@ bandwhich --raw             # Raw output mode
 ### JavaScript/Node.js
 
 #### Runtime and Package Managers
+
 ```bash
 # Node.js
 node --version               # Check Node.js version
@@ -272,6 +289,7 @@ pi                          # → pnpm install
 ```
 
 #### Development Tools
+
 ```bash
 # TypeScript
 tsc file.ts                  # Compile TypeScript
@@ -284,6 +302,7 @@ stylelint styles.css         # Lint CSS
 ```
 
 #### Project Creation
+
 ```bash
 js-project-init my-app react     # Create React project
 js-project-init my-api node      # Create Node.js project
@@ -294,6 +313,7 @@ package-json-gen                 # Generate package.json with scripts
 ### Rust
 
 #### Cargo Commands
+
 ```bash
 # Basic operations
 cargo new my-project         # Create new project
@@ -311,7 +331,8 @@ ct                          # → cargo test
 ccl                         # → cargo clippy
 ```
 
-#### Development Tools
+#### Rust Development Tools
+
 ```bash
 # Code quality
 cargo clippy                 # Lint code
@@ -325,7 +346,8 @@ cargo watch -x run          # Watch and run
 bacon                       # Background code checker
 ```
 
-#### Project Creation
+#### Rust Project Creation
+
 ```bash
 rust-project-init my-project bin        # Create binary project
 rust-project-init my-lib lib           # Create library project
@@ -335,6 +357,7 @@ rust-project-init my-workspace workspace # Create workspace
 ### Python
 
 #### Python Tools
+
 ```bash
 python --version             # Check Python version
 pip install package          # Install package
@@ -346,6 +369,7 @@ ruff file.py                # Fast linter
 ### Go
 
 #### Go Commands
+
 ```bash
 go version                   # Check Go version
 go build                    # Build project
@@ -358,6 +382,7 @@ go mod tidy                 # Clean up dependencies
 ## Git Integration
 
 ### Git Aliases (Configured)
+
 ```bash
 # Basic operations
 git s                       # → git status
@@ -378,6 +403,7 @@ git visual                  # → gitk
 ```
 
 ### Git Tools
+
 ```bash
 # lazygit - Terminal UI
 lg                          # Launch lazygit
@@ -390,6 +416,7 @@ git diff                    # Uses delta for enhanced diff display
 ## Editor and Development
 
 ### Neovim
+
 Pre-configured with LSP support for multiple languages.
 
 ```bash
@@ -401,6 +428,7 @@ nvim +checkhealth           # Check configuration health
 ## Utility Commands
 
 ### File Management
+
 ```bash
 # Archiving
 tar -czf archive.tar.gz folder    # Create tar.gz archive
@@ -412,6 +440,7 @@ rsync -av source/ dest/          # Sync directories
 ```
 
 ### Text Processing
+
 ```bash
 # sed alternative (sd)
 sd 'old text' 'new text' file.txt    # Replace text in file
@@ -423,6 +452,7 @@ yq -i '.key.subkey = "value"' file.yaml  # Modify YAML file
 ```
 
 ### Documentation
+
 ```bash
 # tldr - Simplified man pages
 tldr command                     # Quick examples for command
@@ -437,12 +467,14 @@ command --help                  # Command help (most tools)
 ## Configuration Locations
 
 ### Tool Configurations
+
 - **Fish Shell**: `~/.config/fish/` (managed by home-manager)
 - **Git**: `~/.gitconfig` (linked from `config/git/.gitconfig`)
 - **WezTerm**: `~/.wezterm.lua` (linked from `config/wezterm/.wezterm.lua`)
 - **Neovim**: `~/.config/nvim/` (managed by home-manager)
 
 ### Nix Configurations
+
 - **Home Manager**: `home/home.nix` and related files
 - **System Config**: `darwin/darwin.nix` (macOS) or `nixos/configuration.nix` (NixOS)
 - **Development Modules**: `modules/dev/*.nix`
@@ -450,6 +482,7 @@ command --help                  # Command help (most tools)
 ## Environment Variables
 
 ### Important Variables Set
+
 ```bash
 # Development
 CARGO_HOME="${HOME}/.cargo"      # Rust/Cargo home
@@ -462,6 +495,7 @@ RUST_LOG="info"                 # Rust logging level
 ```
 
 ### Path Additions
+
 ```bash
 # Additional paths added to $PATH
 ${HOME}/.cargo/bin              # Rust binaries

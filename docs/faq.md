@@ -71,6 +71,7 @@ See the [Tool Reference](tool-reference.md) for complete list.
    ```
 
 3. **Bootstrap configuration**:
+
    ```bash
    # macOS
    nix run nix-darwin -- switch --flake github:mabroor/dotfiles
@@ -84,17 +85,20 @@ See the [Tool Reference](tool-reference.md) for complete list.
 **A:** Common troubleshooting steps:
 
 1. **Check Nix installation**:
+
    ```bash
    nix --version
    nix-env --version
    ```
 
 2. **Verify flakes are enabled**:
+
    ```bash
    cat ~/.config/nix/nix.conf
    ```
 
 3. **Check for conflicts**:
+
    ```bash
    # Look for existing configurations
    ls -la ~/.config/
@@ -102,6 +106,7 @@ See the [Tool Reference](tool-reference.md) for complete list.
    ```
 
 4. **View detailed error messages**:
+
    ```bash
    nix flake check --show-trace
    ```
@@ -111,6 +116,7 @@ See the [Tool Reference](tool-reference.md) for complete list.
 **A:** Edit the relevant configuration files:
 
 1. **Git configuration** (`home/git.nix`):
+
    ```nix
    programs.git = {
      userName = "Your Name";
@@ -119,6 +125,7 @@ See the [Tool Reference](tool-reference.md) for complete list.
    ```
 
 2. **NPM configuration** (`modules/dev/javascript.nix`):
+
    ```nix
    home.sessionVariables = {
      NPM_CONFIG_INIT_AUTHOR_NAME = "Your Name";
@@ -127,6 +134,7 @@ See the [Tool Reference](tool-reference.md) for complete list.
    ```
 
 3. **Apply changes**:
+
    ```bash
    darwin-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
    ```
@@ -178,6 +186,7 @@ cd dev proj     # Jumps to directory matching both "dev" and "proj"
 ```
 
 For traditional cd behavior:
+
 ```bash
 command cd /full/path    # Use original cd
 builtin cd path          # Use shell builtin
