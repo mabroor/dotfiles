@@ -15,10 +15,10 @@ jobs:
     name: "Nix Flake Check"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v25
+        uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
@@ -26,7 +26,7 @@ jobs:
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Cachix
-        uses: cachix/cachix-action@v14
+        uses: cachix/cachix-action@v16
         with:
           name: nix-community
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -61,10 +61,10 @@ jobs:
   #   name: "Build ${{ matrix.config }} (${{ matrix.system }})"
   #   steps:
   #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+  #       uses: actions/checkout@v5
   #
   #     - name: Install Nix
-  #       uses: cachix/install-nix-action@v25
+  #       uses: cachix/install-nix-action@v31
   #       with:
   #         github_access_token: ${{ secrets.GITHUB_TOKEN }}
   #         extra_nix_config: |
@@ -72,7 +72,7 @@ jobs:
   #           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
   #
   #     - name: Setup Cachix
-  #       uses: cachix/cachix-action@v14
+  #       uses: cachix/cachix-action@v16
   #       with:
   #         name: nix-community
   #         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -110,10 +110,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v25
+        uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
@@ -121,7 +121,7 @@ jobs:
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Cachix
-        uses: cachix/cachix-action@v14
+        uses: cachix/cachix-action@v16
         with:
           name: nix-community
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -140,10 +140,10 @@ jobs:
     name: "Security Check"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v25
+        uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
@@ -177,10 +177,10 @@ jobs:
     name: "Check for Updates"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v25
+        uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
@@ -207,7 +207,7 @@ jobs:
     name: "Documentation Check"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check for required documentation
         run: |
@@ -241,7 +241,7 @@ jobs:
           fi
 
       - name: Validate Markdown files
-        uses: davidanson/markdownlint-cli2-action@v18
+        uses: davidanson/markdownlint-cli2-action@v20
         with:
           globs: '**/*.md'
 
