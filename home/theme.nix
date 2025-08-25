@@ -68,7 +68,7 @@ in
   # Qt theming
   qt = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
-    platformTheme = "gtk";
+    platformTheme.name = "gtk";
   };
 
   # Terminal color schemes

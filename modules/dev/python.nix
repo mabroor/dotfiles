@@ -5,7 +5,7 @@
   home.packages = with pkgs; [
     # Python interpreters
     python311        # Python 3.11 (current stable)
-    python312        # Python 3.12 (latest)
+    # python312        # Python 3.12 (latest) - Commented out to avoid version conflict
     pypy3           # PyPy for performance-critical applications
     
     # Package managers and virtual environment tools
@@ -78,7 +78,7 @@
     "py2" = "python2";
     "py3" = "python3";
     "py311" = "python3.11";
-    "py312" = "python3.12";
+    # "py312" = "python3.12";  # Commented out since python312 is not installed
     "ipy" = "ipython";
     
     # pip aliases
@@ -111,7 +111,7 @@
     
     # Testing aliases
     "pytest" = "python -m pytest";
-    "test" = "python -m pytest";
+    "ptest" = "python -m pytest";  # Renamed from 'test' to avoid fish reserved keyword
     "testv" = "python -m pytest -v";
     "testc" = "python -m pytest --cov";
     "testw" = "python -m pytest --watch";

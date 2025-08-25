@@ -9,6 +9,7 @@ function Scheme_for_appearance(appearance)
 end
 
 return {
+  default_prog = { '/home/mabroor/.nix-profile/bin/fish' },
   font = wezterm.font_with_fallback {
     {
       family = 'Monaspace Neon Var',

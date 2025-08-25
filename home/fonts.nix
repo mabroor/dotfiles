@@ -15,6 +15,7 @@
     google-fonts
     
     # Additional programming fonts
+    monaspace  # GitHub's innovative superfamily of fonts for code
     inconsolata
     fantasque-sans-mono
     victor-mono
