@@ -6,7 +6,7 @@ This document explains the architecture and design decisions behind this Nix-bas
 
 ### High-Level Design
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Flake Entry Point                        │
 │                     (flake.nix)                            │
@@ -46,6 +46,7 @@ This document explains the architecture and design decisions behind this Nix-bas
 ## Design Principles
 
 ### 1. Declarative Configuration
+
 All system state is described declaratively in Nix expressions:
 
 ```nix
@@ -59,15 +60,17 @@ system.defaults.dock.autohide = true;
 ```
 
 **Benefits:**
+
 - Reproducible across machines
 - Version-controlled configuration
 - Atomic updates (all-or-nothing)
 - Easy rollbacks
 
 ### 2. Modular Architecture
+
 Each concern is separated into its own module:
 
-```
+```text
 modules/dev/
 ├── javascript.nix    # Node.js/JS environment
 ├── rust.nix         # Rust development
@@ -76,12 +79,14 @@ modules/dev/
 ```
 
 **Benefits:**
+
 - Easy to maintain individual components
 - Selective inclusion of environments
 - Clear separation of concerns
 - Reusable across different configurations
 
 ### 3. Cross-Platform Consistency
+
 Same configuration works on macOS and NixOS with conditional logic:
 
 ```nix
@@ -95,14 +100,16 @@ home.packages = with pkgs; [
 ```
 
 **Benefits:**
+
 - Consistent development environment
 - Single source of truth for configuration
 - Reduced maintenance overhead
 
 ### 4. Layered Overrides
+
 Configuration follows a hierarchy allowing selective customization:
 
-```
+```text
 Base Configuration (flake.nix)
     ↓
 System Configuration (darwin.nix/configuration.nix)  
@@ -142,6 +149,7 @@ The flake serves as the system's entry point and coordinator:
 ```
 
 **Key Responsibilities:**
+
 - Dependency management (inputs)
 - System configuration orchestration
 - Template definitions
@@ -150,6 +158,7 @@ The flake serves as the system's entry point and coordinator:
 ### System Configuration Layer
 
 #### Darwin Configuration (`darwin/darwin.nix`)
+
 Handles macOS system-level settings:
 
 ```nix
@@ -169,6 +178,7 @@ Handles macOS system-level settings:
 ```
 
 #### NixOS Configuration (`nixos/configuration.nix`)
+
 Handles Linux system-level settings:
 
 ```nix
@@ -192,6 +202,7 @@ Handles Linux system-level settings:
 Home-manager handles user-level configuration:
 
 #### Main Configuration (`home/home.nix`)
+
 ```nix
 {
   imports = [
@@ -218,6 +229,7 @@ Home-manager handles user-level configuration:
 ```
 
 #### Tool Modules
+
 Each tool gets its own configuration module:
 
 ```nix
@@ -306,6 +318,7 @@ home.packages = [ pkgs.ripgrep ];
 ```
 
 **Rationale:**
+
 - Users can customize their environment independently
 - Cleaner separation of concerns
 - Easier to maintain user-specific configurations
@@ -314,6 +327,7 @@ home.packages = [ pkgs.ripgrep ];
 
 **Choice:** Fish over Bash/Zsh
 **Rationale:**
+
 - Better out-of-the-box experience
 - Superior auto-completion
 - Modern syntax highlighting
@@ -331,6 +345,7 @@ home.packages = [ pkgs.ripgrep ];
 | `find` | `fd` | Simpler syntax, faster |
 
 **Rationale:**
+
 - Improved user experience
 - Better defaults
 - Enhanced functionality
@@ -339,7 +354,8 @@ home.packages = [ pkgs.ripgrep ];
 ### 4. Template-Based Project Creation
 
 **Architecture:**
-```
+
+```text
 templates/
 ├── rust/
 │   ├── flake.nix
@@ -353,6 +369,7 @@ templates/
 ```
 
 **Benefits:**
+
 - Consistent project structure
 - Pre-configured development environments
 - Rapid project bootstrapping
@@ -362,6 +379,7 @@ templates/
 
 **Choice:** Nix Flakes over traditional Nix
 **Benefits:**
+
 - Reproducible builds via lock files
 - Cleaner dependency management
 - Better composability
@@ -381,6 +399,7 @@ nixos/configuration.nix  # Linux
 ```
 
 **Benefits:**
+
 - Maximum code reuse
 - Consistent user experience
 - Platform-specific optimizations where needed
@@ -388,34 +407,40 @@ nixos/configuration.nix  # Linux
 ## Configuration Flow
 
 ### 1. System Bootstrap
-```
+
+```text
 flake.nix → System Config → Host Config → Home Manager
 ```
 
 ### 2. Package Resolution
-```
+
+```text
 Flake Inputs → nixpkgs → Package Selection → System/User Packages
 ```
 
 ### 3. Configuration Application
-```
+
+```text
 Nix Build → Symlink Generation → Service Activation → User Session
 ```
 
 ## Extension Points
 
 ### Adding New Tools
+
 1. **User packages**: Add to `home.packages` in `home/home.nix`
 2. **System packages**: Add to `environment.systemPackages` in system config
 3. **Configured programs**: Create new module in `home/`
 
 ### Adding New Development Environments
+
 1. Create module in `modules/dev/`
 2. Define packages, aliases, environment variables
 3. Import in `home/home.nix`
 4. Optional: Create project template
 
 ### Adding New Hosts
+
 1. Create directory in `hosts/`
 2. Define host-specific overrides
 3. Register in `flake.nix` outputs
@@ -423,11 +448,13 @@ Nix Build → Symlink Generation → Service Activation → User Session
 ## Performance Considerations
 
 ### Build Optimization
+
 - **Binary caches**: Use official and community caches
 - **Lazy evaluation**: Only evaluate what's needed
 - **Modular structure**: Minimize rebuilds on changes
 
 ### Runtime Performance
+
 - **Shell startup**: Minimize expensive operations in shell init
 - **Tool selection**: Choose performant modern alternatives
 - **Caching**: Leverage tool-specific caching (cargo, npm, etc.)
@@ -435,11 +462,13 @@ Nix Build → Symlink Generation → Service Activation → User Session
 ## Security Considerations
 
 ### Secret Management
+
 - **agenix integration**: Encrypted secrets in Git
 - **SSH key management**: Declarative SSH configuration
 - **Environment variables**: Avoid secrets in config files
 
 ### System Security
+
 - **Principle of least privilege**: Minimal system modifications
 - **Isolation**: User-level configuration preferred
 - **Updates**: Regular security updates via flake updates
@@ -447,11 +476,13 @@ Nix Build → Symlink Generation → Service Activation → User Session
 ## Migration and Compatibility
 
 ### Backwards Compatibility
+
 - **Aliases**: Traditional commands work via aliases
 - **PATH management**: Traditional tools available when needed
 - **Gradual adoption**: Can coexist with existing dotfiles
 
 ### Migration Strategy
+
 1. **Parallel installation**: Run alongside existing setup
 2. **Incremental migration**: Move tools one at a time  
 3. **Validation**: Verify functionality before removing old config

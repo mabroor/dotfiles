@@ -58,11 +58,13 @@ See the [Tool Reference](tool-reference.md) for complete list.
 **A:** Follow these steps:
 
 1. **Install Nix** (if not already installed):
+
    ```bash
    curl -L https://nixos.org/nix/install | sh
    ```
 
 2. **Enable Nix Flakes**:
+
    ```bash
    mkdir -p ~/.config/nix
    echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
@@ -186,6 +188,7 @@ builtin cd path          # Use shell builtin
 **A:** Edit the appropriate configuration file:
 
 1. **General aliases** (`home/home.nix`):
+
    ```nix
    programs.fish.shellAliases = {
      myalias = "my-command --with-options";
@@ -193,6 +196,7 @@ builtin cd path          # Use shell builtin
    ```
 
 2. **Language-specific aliases** (e.g., `modules/dev/rust.nix`):
+
    ```nix
    programs.fish.shellAliases = {
      cr = "cargo run";
@@ -200,6 +204,7 @@ builtin cd path          # Use shell builtin
    ```
 
 3. **Apply changes**:
+
    ```bash
    darwin-rebuild switch --flake .
    ```
@@ -211,6 +216,7 @@ builtin cd path          # Use shell builtin
 **A:** Add it to the appropriate configuration:
 
 1. **User packages** (`home/home.nix`):
+
    ```nix
    home.packages = with pkgs; [
      existing-package
@@ -219,6 +225,7 @@ builtin cd path          # Use shell builtin
    ```
 
 2. **System packages** (`darwin/darwin.nix` or `nixos/configuration.nix`):
+
    ```nix
    environment.systemPackages = [
      pkgs.new-package
@@ -226,6 +233,7 @@ builtin cd path          # Use shell builtin
    ```
 
 3. **Apply changes**:
+
    ```bash
    darwin-rebuild switch --flake .
    ```
@@ -279,6 +287,7 @@ darwin-rebuild switch --flake .
 **A:** Create a new module:
 
 1. **Create module file** (`modules/dev/mylang.nix`):
+
    ```nix
    { config, pkgs, ... }:
    {
@@ -294,6 +303,7 @@ darwin-rebuild switch --flake .
    ```
 
 2. **Import in home.nix**:
+
    ```nix
    imports = [
      # existing imports...
@@ -306,21 +316,25 @@ darwin-rebuild switch --flake .
 **A:** Check several things:
 
 1. **Verify scripts are executable**:
+
    ```bash
    ls -la ~/.local/bin/
    ```
 
 2. **Check PATH includes script directory**:
+
    ```bash
    echo $PATH | grep .local/bin
    ```
 
 3. **Test script directly**:
+
    ```bash
    ~/.local/bin/rust-project-init test-project
    ```
 
 4. **Check dependencies are installed**:
+
    ```bash
    which cargo  # For rust scripts
    which node   # For JS scripts
@@ -349,17 +363,20 @@ If missing, they should be in your development modules. Check the configuration 
 **A:** The configuration uses the Tide prompt for Fish. If it's not working:
 
 1. **Verify Fish is default shell**:
+
    ```bash
    echo $SHELL
    # Should show path to fish
    ```
 
 2. **Check if Tide is configured**:
+
    ```fish
    tide configure
    ```
 
 3. **Reconfigure if needed**:
+
    ```fish
    tide configure --auto --style=Lean
    ```
@@ -369,11 +386,13 @@ If missing, they should be in your development modules. Check the configuration 
 **A:** Several optimization strategies:
 
 1. **Check shell startup time**:
+
    ```bash
    time fish -c exit
    ```
 
 2. **Profile shell startup**:
+
    ```fish
    fish --profile /tmp/fish.profile -c exit
    cat /tmp/fish.profile
@@ -456,6 +475,7 @@ darwin-rebuild switch --switch-generation 42
 **A:** Follow these steps:
 
 1. **Create template directory**:
+
    ```bash
    mkdir templates/mylang
    ```
@@ -463,6 +483,7 @@ darwin-rebuild switch --switch-generation 42
 2. **Add template files** (flake.nix, project files, etc.)
 
 3. **Register in main flake.nix**:
+
    ```nix
    templates = {
      mylang = {
@@ -473,6 +494,7 @@ darwin-rebuild switch --switch-generation 42
    ```
 
 4. **Use template**:
+
    ```bash
    nix flake init --template github:mabroor/dotfiles#mylang
    ```
@@ -482,6 +504,7 @@ darwin-rebuild switch --switch-generation 42
 **A:** Use the agenix integration:
 
 1. **Create secret file**:
+
    ```bash
    agenix -e mysecret.age
    ```
@@ -489,6 +512,7 @@ darwin-rebuild switch --switch-generation 42
 2. **Add to secrets configuration** (`secrets/secrets.nix`)
 
 3. **Reference in configuration**:
+
    ```nix
    age.secrets.mysecret.file = ../secrets/mysecret.age;
    ```
@@ -530,6 +554,7 @@ See agenix documentation for detailed setup.
    - [Home Manager manual](https://nix-community.github.io/home-manager/)
 
 4. **Tool-specific help**:
+
    ```bash
    tool-name --help
    man tool-name

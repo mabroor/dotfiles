@@ -6,7 +6,7 @@ This guide is for developers who want to enhance, customize, or contribute to th
 
 ### Repository Structure
 
-```
+```text
 dotfiles/
 ├── flake.nix              # Main entry point - defines all configurations
 ├── flake.lock             # Locked dependency versions
@@ -57,6 +57,7 @@ dotfiles/
 ### Setting Up Development Environment
 
 1. **Clone and enter the repository:**
+
    ```bash
    cd ~/src/github.com/mabroor/dotfiles
    ```
@@ -64,6 +65,7 @@ dotfiles/
 2. **Make changes to configuration files**
 
 3. **Test changes:**
+
    ```bash
    # Check configuration syntax
    nix flake check
@@ -74,12 +76,14 @@ dotfiles/
    ```
 
 4. **Apply changes:**
+
    ```bash
    darwin-rebuild switch --flake .  # macOS
    sudo nixos-rebuild switch --flake .  # NixOS
    ```
 
 5. **Commit changes:**
+
    ```bash
    git add .
    git commit -m "feat: description of changes"
@@ -91,6 +95,7 @@ dotfiles/
 #### Adding New Packages
 
 1. **User-level packages** - Edit `home/home.nix`:
+
    ```nix
    home.packages = with pkgs; [
      # existing packages...
@@ -99,6 +104,7 @@ dotfiles/
    ```
 
 2. **System-level packages** - Edit `darwin/darwin.nix` or `nixos/configuration.nix`:
+
    ```nix
    environment.systemPackages = [
      pkgs.new-system-package
@@ -108,6 +114,7 @@ dotfiles/
 #### Creating New Development Environments
 
 1. **Create new module** in `modules/dev/`:
+
    ```nix
    # modules/dev/mylang.nix
    { config, pkgs, ... }:
@@ -131,6 +138,7 @@ dotfiles/
    ```
 
 2. **Import in home.nix:**
+
    ```nix
    imports = [
      # existing imports...
@@ -166,12 +174,14 @@ programs.toolname = {
 ### Creating Project Templates
 
 1. **Create template directory** in `templates/`:
+
    ```bash
    mkdir templates/mylang
    cd templates/mylang
    ```
 
 2. **Add template files:**
+
    ```nix
    # templates/mylang/flake.nix
    {
@@ -317,16 +327,19 @@ Use conditional logic for platform-specific configurations:
 ### Testing Changes
 
 1. **Syntax check:**
+
    ```bash
    nix flake check
    ```
 
 2. **Build test:**
+
    ```bash
    nix build .#darwinConfigurations.HOSTNAME.system
    ```
 
 3. **Integration test:**
+
    ```bash
    darwin-rebuild switch --flake . --dry-run
    ```
@@ -361,11 +374,13 @@ When adding features:
 ### Updating Dependencies
 
 1. Update flake inputs:
+
    ```bash
    nix flake update
    ```
 
 2. Test changes:
+
    ```bash
    nix flake check
    darwin-rebuild switch --flake .
@@ -395,6 +410,7 @@ nix repl '<nixpkgs>'           # Interactive Nix REPL
 If configuration breaks:
 
 1. **Rollback system:**
+
    ```bash
    darwin-rebuild --rollback  # macOS
    sudo nixos-rebuild --rollback  # NixOS
@@ -407,17 +423,20 @@ If configuration breaks:
 ## Resources
 
 ### Nix Documentation
+
 - [Nix Manual](https://nixos.org/manual/nix/stable/)
 - [NixOS Manual](https://nixos.org/manual/nixos/stable/)
 - [Home Manager Manual](https://nix-community.github.io/home-manager/)
 - [nix-darwin Manual](https://github.com/LnL7/nix-darwin)
 
 ### Learning Resources
+
 - [Nix Pills](https://nixos.org/guides/nix-pills/) - Deep dive into Nix
 - [NixOS Wiki](https://nixos.wiki/) - Community knowledge base
 - [Home Manager Options](https://mipmip.github.io/home-manager-option-search/) - Searchable options
 
 ### Community
+
 - [NixOS Discourse](https://discourse.nixos.org/)
 - [r/NixOS](https://www.reddit.com/r/NixOS/)
 - [NixOS Matrix Channels](https://nixos.org/community.html#chat)
