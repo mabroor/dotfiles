@@ -54,7 +54,7 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 
 #### Step 2: Initial System Bootstrap
 
-##### For macOS (Darwin):
+##### For macOS (Darwin)
 
 1. **Run the bootstrap command directly from GitHub:**
 
@@ -78,7 +78,7 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
    darwin-rebuild --version
    ```
 
-##### For NixOS:
+##### For NixOS
 
 1. **During NixOS installation**, add this to your `/etc/nixos/configuration.nix`:
 
@@ -96,7 +96,7 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 
 3. **Restart your system** to ensure all changes take effect.
 
-##### For Linux (non-NixOS) with Home Manager only:
+##### For Linux (non-NixOS) with Home Manager only
 
 This section covers setting up this repository on fresh Linux VMs or systems that aren't running NixOS (e.g., Ubuntu, Debian, Fedora, CentOS, etc.).
 
@@ -146,7 +146,7 @@ This section covers setting up this repository on fresh Linux VMs or systems tha
    su - USERNAME
    ```
 
-###### Step 1: Install Nix
+###### Step 1: Install Nix for Linux
 
 After installing Nix (see Step 1 above), you need to ensure it's properly configured for your Linux distribution:
 
@@ -318,19 +318,19 @@ nix flake show --json | jq '.templates'
 
 Once you have the repository cloned locally:
 
-#### macOS:
+#### macOS
 
 ```bash
 darwin-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
 ```
 
-#### NixOS:
+#### NixOS
 
 ```bash
 sudo nixos-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
 ```
 
-#### Home Manager (standalone):
+#### Home Manager (standalone)
 
 ```bash
 home-manager switch --flake ~/src/github.com/mabroor/dotfiles
@@ -338,7 +338,7 @@ home-manager switch --flake ~/src/github.com/mabroor/dotfiles
 
 ### Troubleshooting Fresh Installs
 
-#### Common Issues:
+#### Common Issues
 
 1. **"command not found: darwin-rebuild"**
    - Ensure you've restarted your terminal after the initial bootstrap
@@ -348,7 +348,7 @@ home-manager switch --flake ~/src/github.com/mabroor/dotfiles
    - The Determinate Systems installer should enable this automatically
    - If not, add to `~/.config/nix/nix.conf`:
 
-     ```
+     ```text
      experimental-features = nix-command flakes
      ```
 
@@ -365,7 +365,7 @@ home-manager switch --flake ~/src/github.com/mabroor/dotfiles
    - Run `darwin-rebuild switch` again after Homebrew installs
    - Check Homebrew installation: `brew --version`
 
-#### Linux-Specific Troubleshooting:
+#### Linux-Specific Troubleshooting
 
 1. **"error: cannot connect to daemon"**
    - Ensure the Nix daemon is running: `sudo systemctl status nix-daemon`
