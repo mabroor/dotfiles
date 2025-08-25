@@ -154,6 +154,7 @@ grep  # → rg (ripgrep)
 ```
 
 If you want the original commands:
+
 ```bash
 command ls    # Use original ls
 \ls           # Bypass alias

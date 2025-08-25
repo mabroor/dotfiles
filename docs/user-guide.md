@@ -113,7 +113,6 @@ git last    # → git log -1 HEAD
 - **delta** - Better git diff with syntax highlighting
 - Automatic HTTPS → SSH conversion for GitHub
 
-
 ## Development Environments
 
 Your configuration includes pre-configured development environments for multiple languages:
@@ -206,10 +205,10 @@ rust-project-init my-workspace workspace # Create workspace
 ### Fuzzy Finding (fzf)
 
 Your fzf configuration includes:
+
 - **Ctrl+R** - Search command history
 - **Ctrl+T** - Find files in current directory
 - **Alt+C** - Change to subdirectory
-
 
 Preview integration with bat for file previews.
 
@@ -290,7 +289,6 @@ nix flake show      # Show available configurations
 2. Rebuild your configuration
 3. New tools will be available immediately
 
-
 ### Adding Shell Aliases
 
 1. Edit the appropriate module (e.g., `home/home.nix` for general aliases)
@@ -300,10 +298,10 @@ nix flake show      # Show available configurations
 ### Customizing Tools
 
 Each tool has its own configuration file in the `home/` directory:
+
 - `git.nix` - Git configuration and aliases
 - `wezterm.nix` - Terminal configuration  
 - `neovim.nix` - Editor configuration
-
 
 ## Getting Help
 
@@ -347,10 +345,10 @@ nix-env --query # List installed packages (user level)
 ### Recovery
 
 If something breaks:
+
 1. Check the last working configuration in git history
 2. Roll back using `darwin-rebuild --rollback` or similar
 3. Edit configuration files to fix issues
-
 
 ## Next Steps
 
