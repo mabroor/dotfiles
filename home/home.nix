@@ -78,6 +78,12 @@
 
       interactiveShellInit = ''
         set fish_greeting # N/A
+        
+        # Configure Tide prompt
+        if not set -q tide_configured
+          tide configure --auto --style=Lean --prompt_colors='True color' --show_time='24-hour format' --lean_prompt_height='Two lines' --prompt_connection=Disconnected --prompt_spacing=Compact --icons='Many icons' --transient=No
+          set -U tide_configured 1
+        end
       '';
 
       shellAliases = {
@@ -109,6 +115,15 @@
             repo = "nix-env.fish";
             rev = "7b65bd228429e852c8fdfa07601159130a818cfa";
             hash = "sha256-RG/0rfhgq6aEKNZ0XwIqOaZ6K5S4+/Y5EEMnIdtfPhk=";
+          };
+        }
+        {
+          name = "tide";
+          src = pkgs.fetchFromGitHub {
+            owner = "IlanCosman";
+            repo = "tide";
+            rev = "v6.1.1";
+            hash = "sha256-ZyEk/WoxdX5Fr2kXRERQS1U1QHH3oVSyBQvlwYnEYyc=";
           };
         }
       ];
@@ -155,7 +170,7 @@
     };
 
     starship = {
-      enable = true;
+      enable = false; # Disabled - using Tide prompt instead
 
       settings = {
         # Global settings
