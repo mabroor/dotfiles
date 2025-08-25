@@ -68,6 +68,24 @@
       };
     };
 
+    # Standalone home-manager configurations
+    homeConfigurations = {
+      "mabroor" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [
+          ./home/home.nix
+          agenix.homeManagerModules.default
+          {
+            home = {
+              username = "mabroor";
+              homeDirectory = "/home/mabroor";
+            };
+          }
+        ];
+        extraSpecialArgs = { inherit inputs; };
+      };
+    };
+
     # Project templates for quick development setup
     templates = {
       rust = {
