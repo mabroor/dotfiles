@@ -47,6 +47,7 @@
       yq         # YAML/XML processor
       fzf        # Fuzzy finder
       tree       # Directory tree viewer
+      glow       # Markdown renderer for terminal
       tldr       # Simplified man pages
 
       # Network and system tools
