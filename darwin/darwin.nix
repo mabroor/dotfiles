@@ -51,18 +51,12 @@
       nerd-fonts.droid-sans-mono
       nerd-fonts.space-mono
       
-      # Programming fonts - Regular
-      monaspace
-      jetbrains-mono
-      fira-code
-      fira-code-symbols
-      source-code-pro
-      hack-font
-      ubuntu_font_family
-      cascadia-code
-      inconsolata
-      fantasque-sans-mono
-      victor-mono
+      # Programming fonts - Regular (only those without Nerd Font variants)
+      monaspace  # No Nerd Font variant available
+      fira-code-symbols  # Symbols package, complements Nerd Font
+      cascadia-code  # No Nerd Font variant available
+      fantasque-sans-mono  # No Nerd Font variant available
+      victor-mono  # No Nerd Font variant available
       
       # System and design fonts
       atkinson-hyperlegible
@@ -87,11 +81,8 @@
       font-awesome
       material-design-icons
       
-      # Apple fonts (if available)
-      sf-pro
-      sf-compact
-      sf-mono
-      ny-font
+      # Note: Apple system fonts (SF Pro, SF Mono, etc.) are already available
+      # on macOS and don't need to be installed via Nix
     ];
   };
 
