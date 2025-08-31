@@ -190,7 +190,7 @@ fonts = {
 Add to `home/fonts.nix` in the `home.packages` list (will only work on non-NixOS Linux):
 
 ```nix
-home.packages = with pkgs; lib.optionals (!systemManagedFonts) [
+home.packages = with pkgs; lib.optionals isStandaloneLinux [
   # Add your font here
   your-new-font
 ];
