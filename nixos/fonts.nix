@@ -63,7 +63,7 @@
       
       # Linux-specific fonts
       noto-fonts
-      noto-fonts-cjk
+      noto-fonts-cjk-sans
       noto-fonts-emoji
       dejavu_fonts
       freefont_ttf
