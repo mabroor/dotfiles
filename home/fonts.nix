@@ -74,7 +74,7 @@ in
       $DRY_RUN_CMD ${pkgs.fontconfig}/bin/fc-cache -f $VERBOSE_ARG || true
       
       # Verify Nerd Fonts are available
-      if [ -z "$DRY_RUN" ]; then
+      if [ -z "''${DRY_RUN:-}" ]; then
         echo "Checking for Nerd Font installation..."
         if ${pkgs.fontconfig}/bin/fc-list | ${pkgs.gnugrep}/bin/grep -q "Nerd Font"; then
           echo "✓ Nerd Fonts successfully installed"
