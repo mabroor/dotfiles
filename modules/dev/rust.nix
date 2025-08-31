@@ -128,7 +128,7 @@
     RUST_LOG = "info";
     
     # Cargo build jobs (adjust based on your CPU cores)
-    CARGO_BUILD_JOBS = "0"; # 0 means use all available cores
+    # CARGO_BUILD_JOBS = "8"; # Set to specific number, or omit to use default
     
     # Faster incremental compilation
     CARGO_INCREMENTAL = "1";
@@ -485,7 +485,8 @@
     text = ''
       [build]
       # Enable faster builds with multiple cores
-      jobs = 0  # Use all available cores
+      # jobs = 8  # Set to a specific number, or omit to use default (number of CPUs)
+      # Note: jobs = 0 is invalid in Cargo and will cause errors
       
       [cargo-new]
       # Default template for new projects
@@ -494,11 +495,13 @@
       [registry]
       default = "crates-io"
       
-      [source.crates-io]
-      replace-with = "vendored-sources"
-      
-      [source.vendored-sources]
-      directory = "vendor"
+      # Vendored sources configuration (disabled by default)
+      # Only enable if you have a vendor directory with dependencies
+      # [source.crates-io]
+      # replace-with = "vendored-sources"
+      # 
+      # [source.vendored-sources]
+      # directory = "/absolute/path/to/vendor"
       
       [net]
       # Use Git CLI for authentication (helps with private repos)
