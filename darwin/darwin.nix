@@ -33,13 +33,25 @@
 
   fonts = {
     fontDir.enable = true;
+    
+    # Note: macOS automatically registers fonts when fontDir.enable = true
+    # The fonts are symlinked to /Library/Fonts/Nix Fonts/
+    # and are immediately available to all applications
+    
     fonts = with pkgs; [
-      # Programming fonts
+      # Programming fonts - Nerd Fonts
       nerd-fonts.jetbrains-mono
       nerd-fonts.fira-code
       nerd-fonts.hack
       nerd-fonts.sauce-code-pro
       nerd-fonts.ubuntu-mono
+      nerd-fonts.meslo-lg
+      nerd-fonts.inconsolata
+      nerd-fonts.dejavu-sans-mono
+      nerd-fonts.droid-sans-mono
+      nerd-fonts.space-mono
+      
+      # Programming fonts - Regular
       monaspace
       jetbrains-mono
       fira-code
@@ -48,14 +60,28 @@
       hack-font
       ubuntu_font_family
       cascadia-code
+      inconsolata
+      fantasque-sans-mono
+      victor-mono
       
-      # System fonts
+      # System and design fonts
       atkinson-hyperlegible
       inter
       roboto
       roboto-mono
+      roboto-slab
       open-sans
       liberation_ttf
+      eb-garamond
+      gentium
+      lato
+      montserrat
+      source-sans-pro
+      source-serif-pro
+      work-sans
+      
+      # Google Fonts collection
+      google-fonts
       
       # Iconic and symbol fonts
       font-awesome

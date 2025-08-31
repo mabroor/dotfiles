@@ -1,41 +1,99 @@
 # Font configuration for home-manager
 { config, pkgs, lib, ... }:
 
+let
+  # Detect if we're on NixOS or Darwin (where fonts are managed at system level)
+  # On these systems, fonts should NOT be installed via home-manager
+  systemManagedFonts = pkgs.stdenv.isDarwin || (builtins.pathExists /etc/NIXOS);
+  
+  # For non-NixOS Linux, we need to install fonts via home-manager
+  isStandaloneLinux = pkgs.stdenv.isLinux && !systemManagedFonts;
+in
 {
-  # Additional fonts managed by home-manager
-  home.packages = with pkgs; [
-    # Individual Nerd Fonts (new structure)
-    nerd-fonts.meslo-lg
-    nerd-fonts.inconsolata
-    nerd-fonts.dejavu-sans-mono
-    nerd-fonts.droid-sans-mono
-    nerd-fonts.space-mono
+  # Font installation approach:
+  # - macOS (Darwin): Fonts MUST be installed at system level (darwin/darwin.nix)
+  # - NixOS: Fonts should be installed at system level (nixos/fonts.nix) for ALL users
+  # - Non-NixOS Linux: Fonts can be installed per-user via home-manager
+  # 
+  # Only install fonts via home-manager on non-NixOS Linux systems
+  home.packages = with pkgs; lib.optionals isStandaloneLinux [
+    # IMPORTANT: Install Nerd Font versions for powerline support
+    # These include all powerline symbols and icons
     
-    # Google Fonts
-    google-fonts
+    # Primary Nerd Fonts with powerline symbols
+    nerd-fonts.jetbrains-mono     # JetBrainsMono Nerd Font
+    nerd-fonts.fira-code          # FiraCode Nerd Font
+    nerd-fonts.hack               # Hack Nerd Font
+    nerd-fonts.sauce-code-pro     # SauceCodePro Nerd Font (Source Code Pro)
+    nerd-fonts.ubuntu-mono        # UbuntuMono Nerd Font
+    nerd-fonts.meslo-lg           # MesloLG Nerd Font
+    nerd-fonts.inconsolata        # Inconsolata Nerd Font
+    nerd-fonts.dejavu-sans-mono   # DejaVuSansMono Nerd Font
+    nerd-fonts.droid-sans-mono    # DroidSansMono Nerd Font
+    nerd-fonts.space-mono         # SpaceMono Nerd Font
     
-    # Additional programming fonts
+    # Regular programming fonts (without powerline)
+    # These are fallbacks if Nerd Font versions aren't recognized
     monaspace  # GitHub's innovative superfamily of fonts for code
-    inconsolata
+    fira-code-symbols
+    cascadia-code
     fantasque-sans-mono
     victor-mono
     
-    # Design and display fonts
+    # System and design fonts
+    atkinson-hyperlegible
+    inter
+    roboto
+    roboto-mono
+    roboto-slab
+    open-sans
+    liberation_ttf
     eb-garamond
     gentium
     lato
     montserrat
-    roboto
-    roboto-slab
     source-sans-pro
     source-serif-pro
     work-sans
+    
+    # Note: google-fonts package removed due to conflicts with individual font packages
+    # All needed fonts are installed individually above
+    
+    # Icon fonts
+    font-awesome
+    material-design-icons
   ];
 
-  # Font configuration (system-level configuration needed)
-  # Note: fontconfig is not available in home-manager
-  # These settings should be configured at the system level (NixOS or nix-darwin)
-  # For reference, the recommended settings are:
+  # Fontconfig for Linux systems (ensures fonts are properly registered)
+  fonts.fontconfig.enable = lib.mkIf isStandaloneLinux true;
+  
+  # Post-installation activation script for font setup
+  home.activation = lib.mkIf isStandaloneLinux {
+    refreshFontCache = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      # Refresh font cache after installing fonts
+      $DRY_RUN_CMD ${pkgs.fontconfig}/bin/fc-cache -f $VERBOSE_ARG || true
+      
+      # Verify Nerd Fonts are available
+      if [ -z "$DRY_RUN" ]; then
+        echo "Checking for Nerd Font installation..."
+        if ${pkgs.fontconfig}/bin/fc-list | ${pkgs.gnugrep}/bin/grep -q "Nerd Font"; then
+          echo "✓ Nerd Fonts successfully installed"
+          echo "Available Nerd Fonts:"
+          ${pkgs.fontconfig}/bin/fc-list : family | ${pkgs.gnugrep}/bin/grep "Nerd Font" | ${pkgs.coreutils}/bin/sort -u | ${pkgs.coreutils}/bin/head -5
+        else
+          echo "⚠ Warning: Nerd Fonts may not be properly installed"
+        fi
+      fi
+    '';
+  };
+  
+  # Font configuration notes:
+  # - On macOS: Fonts MUST be installed via darwin.nix (system-level)
+  #   Home-manager cannot properly register fonts with macOS
+  # - On Linux/NixOS: Fonts can be installed via home-manager (user-level)
+  # - fontconfig settings must be configured at system level
+  # 
+  # Recommended font defaults:
   # - Default serif: SF Pro Text, Times New Roman, Liberation Serif
   # - Default sans: SF Pro Text, Helvetica Neue, Liberation Sans  
   # - Default mono: JetBrains Mono, Monaspace Neon, SF Mono

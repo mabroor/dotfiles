@@ -2,6 +2,11 @@
 { config, pkgs, ... }:
 
 {
+  # Import modules
+  imports = [
+    ../../nixos/fonts.nix  # System-wide font configuration
+  ];
+
   # Boot configuration
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
