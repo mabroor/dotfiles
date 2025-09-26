@@ -269,7 +269,7 @@
       mc = "merge --log --no-ff";
       rc = "rebase --continue";
       rs = "rebase --skip";
-      ra = "rebase --abort";
+      rba = "rebase --abort";  # Changed from 'ra' to avoid conflict
       ri = "rebase --interactive";
 
       # Diffing
@@ -282,7 +282,7 @@
       l = "log --graph --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s'";
       la = "log --graph --all --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s'";
       r = "log --graph --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s' -20";
-      ra = "log --graph --all --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s' -20";
+      ra = "log --graph --all --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s' -20";  # Recent All - shows recent commits from all branches
 
       # Show current commit
       h = "log --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s' -1";
