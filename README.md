@@ -13,8 +13,8 @@ A comprehensive, modular Nix-based dotfiles repository supporting macOS (Intel a
 
 ### 🛠️ Development Environment
 
-- **Modern CLI Tools**: bat, eza, fd, sd, delta, btop, dust, procs, lazygit, httpie
-- **Terminal Setup**: Zellij multiplexer with Starship prompt
+- **Modern CLI Tools**: bat, eza, fd, sd, delta, btop, dust, procs, lazygit, httpie, jless
+- **Terminal Setup**: Zellij multiplexer with Fish shell and Tide prompt
 - **Editor**: Neovim with LazyVim-style configuration and LSP support
 - **Language Support**: Rust, Go, Python, JavaScript/Node.js with comprehensive tooling
 
@@ -24,10 +24,11 @@ A comprehensive, modular Nix-based dotfiles repository supporting macOS (Intel a
 - **Font Management**: JetBrains Mono, Monaspace, Nerd Fonts, and system fonts
 - **Terminal Colors**: Coordinated color schemes for all terminal applications
 
-### 🔒 Security & Secrets
+### 🔒 Security & Configuration
 
-- **Secret Management**: agenix for encrypted secrets with age keys
+- **Modern Git Setup**: Sensible defaults with `main` as default branch
 - **SSH Configuration**: Comprehensive SSH client setup with security best practices
+- **Secret Management**: agenix for encrypted secrets with age keys
 - **System Hardening**: Optimized security settings and firewall configuration
 
 ### 🚀 Project Templates
@@ -35,6 +36,29 @@ A comprehensive, modular Nix-based dotfiles repository supporting macOS (Intel a
 - **Rust**: Complete development environment with Cargo tools and CI
 - **JavaScript/Node.js**: Modern setup with multiple package managers
 - **Python**: Poetry integration with comprehensive tooling
+
+## 🎯 Recent Updates
+
+### Git Configuration Modernization
+- Default branch set to `main` for new repositories
+- Comprehensive aliases with conflict resolution (e.g., `rba` for rebase abort)
+- Pull strategy: rebase by default with fast-forward only
+- Push: current branch, auto-setup remote, follow tags
+- Automatic pruning of deleted remote branches and tags
+- Rerere enabled for reusing conflict resolutions
+- Better diff algorithms optimized for code
+
+### Zellij & Fish Shell Improvements
+- **Fixed SSH/su session issues**: Proper PATH and environment setup
+- **Robust session management**: Works across SSH, RDP, and local terminals
+- **Permission fixes**: Handles XDG_RUNTIME_DIR correctly in all scenarios
+- **Safe wrapper script**: `zellij-safe` handles all edge cases automatically
+
+### Development Environment
+- Fish shell as primary shell with comprehensive configuration
+- Zellij terminal multiplexer with custom keybindings
+- Modern CLI tools preconfigured and aliased
+- Tide prompt with beautiful, informative display
 
 ## 🚀 Quick Start
 
@@ -107,10 +131,10 @@ This section covers setting up this repository on fresh Linux VMs or systems tha
    ```bash
    # Debian/Ubuntu
    sudo apt update && sudo apt upgrade -y
-   
+
    # Fedora
    sudo dnf update -y
-   
+
    # RHEL/CentOS/AlmaLinux
    sudo yum update -y
    ```
@@ -120,10 +144,10 @@ This section covers setting up this repository on fresh Linux VMs or systems tha
    ```bash
    # Debian/Ubuntu
    sudo apt install -y curl git xz-utils
-   
+
    # Fedora
    sudo dnf install -y curl git xz
-   
+
    # RHEL/CentOS/AlmaLinux
    sudo yum install -y curl git xz
    ```
@@ -134,14 +158,14 @@ This section covers setting up this repository on fresh Linux VMs or systems tha
    # Create a new user with home directory
    sudo useradd -m -s /bin/bash USERNAME
    sudo passwd USERNAME
-   
+
    # Add to sudo group (optional)
    # Debian/Ubuntu
    sudo usermod -aG sudo USERNAME
-   
+
    # Fedora/RHEL/CentOS
    sudo usermod -aG wheel USERNAME
-   
+
    # Switch to the new user
    su - USERNAME
    ```
@@ -165,7 +189,7 @@ After installing Nix (see Step 1 above), you need to ensure it's properly config
    ```bash
    # Check SELinux status
    sestatus
-   
+
    # If needed, set Nix store to permissive (temporary)
    sudo semanage fcontext -a -t bin_t '/nix/store(/.*)?'
    sudo restorecon -Rv /nix
@@ -186,7 +210,7 @@ After installing Nix (see Step 1 above), you need to ensure it's properly config
    # First, add Home Manager channel
    nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
    nix-channel --update
-   
+
    # Install Home Manager
    nix-shell '<home-manager>' -A install
    ```
@@ -196,15 +220,15 @@ After installing Nix (see Step 1 above), you need to ensure it's properly config
    ```bash
    # Clone the repository first
    git clone https://github.com/mabroor/dotfiles.git ~/src/github.com/mabroor/dotfiles
-   
+
    # Create a custom home configuration for your Linux user
    cd ~/src/github.com/mabroor/dotfiles
-   
+
    # Switch to the configuration
-   home-manager switch --flake .#nixos
+   home-manager switch --flake .#mabroor
    ```
 
-   Note: The `nixos` configuration in this flake is generic. You may want to create a custom configuration for your specific user.
+   Note: Use the `mabroor` configuration or create your own custom configuration.
 
 ###### Step 3: Create a Custom Linux Configuration (Optional)
 
@@ -264,19 +288,8 @@ If you want a personalized configuration for your Linux VM:
      ```
 
 3. **Shell Integration:**
-   - Add to your `.bashrc` or `.profile`:
-
-     ```bash
-     # Source Nix
-     if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
-       . ~/.nix-profile/etc/profile.d/nix.sh
-     fi
-     
-     # Switch to fish if available
-     if command -v fish &> /dev/null; then
-       exec fish
-     fi
-     ```
+   - Fish shell is the default, with automatic Zellij multiplexer startup
+   - The configuration handles SSH sessions properly with environment fixes
 
 4. **Container/VM Considerations:**
    - Ensure adequate disk space (at least 10GB for Nix store)
@@ -333,7 +346,7 @@ sudo nixos-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
 #### Home Manager (standalone)
 
 ```bash
-home-manager switch --flake ~/src/github.com/mabroor/dotfiles
+home-manager switch --flake ~/src/github.com/mabroor/dotfiles#mabroor
 ```
 
 ### Troubleshooting Fresh Installs
@@ -403,6 +416,11 @@ home-manager switch --flake ~/src/github.com/mabroor/dotfiles
    - If not, add it: `echo "$(which fish)" | sudo tee -a /etc/shells`
    - Change default shell: `chsh -s $(which fish)`
 
+8. **Zellij/Fish SSH Issues**
+   - Run the diagnostic script: `./scripts/test-ssh-zellij.sh`
+   - Apply fixes: `./scripts/fix-zellij-permissions.sh`
+   - The configuration includes automatic fixes for SSH session environments
+
 ## 📁 Repository Structure
 
 ```text
@@ -418,13 +436,13 @@ dotfiles/
 │   └── darwin.nix         # Darwin-specific settings
 ├── home/                  # Home Manager configurations
 │   ├── home.nix           # Main home configuration
-│   ├── git.nix            # Git configuration
+│   ├── git.nix            # Git configuration (modernized)
 │   ├── neovim.nix         # Neovim setup
 │   ├── ssh.nix            # SSH configuration
 │   ├── fonts.nix          # Font management
 │   ├── theme.nix          # Theming configuration
 │   ├── wezterm.nix        # WezTerm terminal
-│   └── zellij.nix         # Zellij multiplexer
+│   └── zellij.nix         # Zellij multiplexer (with SSH fixes)
 ├── modules/dev/           # Development environments
 │   ├── rust.nix           # Rust development
 │   ├── go.nix             # Go development
@@ -434,11 +452,14 @@ dotfiles/
 │   ├── rust/              # Rust project template
 │   ├── python/            # Python project template
 │   └── javascript/        # JavaScript project template
+├── scripts/               # Utility scripts
+│   ├── test-ssh-zellij.sh # SSH session testing
+│   ├── fix-zellij-permissions.sh # Permission fixes
+│   └── fix-fish-ssh.sh    # Fish environment verification
 ├── secrets/               # Encrypted secrets (agenix)
 │   ├── secrets.nix        # Secret definitions
 │   └── README.md          # Secret management guide
 └── config/                # Application dotfiles
-    ├── git/               # Git configuration files
     └── wezterm/           # WezTerm configuration
 ```
 
@@ -461,6 +482,11 @@ This setup supports multiple machine types:
 - **Host**: `nixos`
 - **User**: `nixos`
 
+### Home Manager Standalone (x86_64-linux)
+
+- **Configuration**: `mabroor`
+- **User**: `mabroor`
+
 ## 📋 Available Commands
 
 ### System Management
@@ -476,13 +502,13 @@ nix flake check
 nix flake show
 
 # Rebuild system (macOS)
-darwin-rebuild switch --flake ~/dotfiles
+darwin-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
 
 # Rebuild system (NixOS)
-sudo nixos-rebuild switch --flake ~/dotfiles
+sudo nixos-rebuild switch --flake ~/src/github.com/mabroor/dotfiles
 
 # Apply home configuration
-home-manager switch --flake ~/dotfiles
+home-manager switch --flake ~/src/github.com/mabroor/dotfiles#mabroor
 ```
 
 ### Development Tools
@@ -503,9 +529,39 @@ py-project-init my-project web
 js-project-init my-project react
 ```
 
+### Git Aliases (New!)
+
+```bash
+# Common operations
+git st          # Short status with branch info
+git aa          # Add all files
+git ci          # Commit with verbose mode
+git cob         # Checkout new branch
+git pushf       # Push with force-with-lease (safer)
+git rba         # Rebase abort (was 'ra', now 'rba')
+git ff          # Fast-forward merge only
+git cleanup     # Remove merged branches
+
+# Logging
+git l           # Pretty log graph
+git la          # Log all branches
+git r           # Recent commits (20)
+git ra          # Recent all branches (20)
+
+# Maintenance
+git undo        # Undo last commit (soft reset)
+git unstage     # Unstage files
+git recent      # Show branches by last commit
+```
+
 ### Utility Scripts
 
 ```bash
+# SSH/Zellij troubleshooting
+./scripts/test-ssh-zellij.sh       # Test SSH session environment
+./scripts/fix-zellij-permissions.sh # Fix permission issues
+./scripts/fix-fish-ssh.sh          # Verify Fish environment
+
 # SSH key management
 ssh-key-setup
 
@@ -582,8 +638,8 @@ The configuration includes a comprehensive font setup:
 
 Consistent Catppuccin Macchiato theme across:
 
-- Terminal applications (Alacritty, Kitty, WezTerm)
-- CLI tools (bat, fzf, delta)
+- Terminal applications (WezTerm, Zellij, Fish)
+- CLI tools (bat, fzf, delta, eza)
 - Neovim and development tools
 
 ### macOS System Preferences
@@ -643,8 +699,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you encounter issues:
 
 1. Check existing [issues](https://github.com/mabroor/dotfiles/issues)
-2. Run `nix flake check` to validate your configuration
-3. Review the documentation in this repository
-4. Create a new issue with the provided template
+2. Run diagnostic scripts in `scripts/` directory
+3. Run `nix flake check` to validate your configuration
+4. Review the documentation in this repository
+5. Create a new issue with the provided template
 
 ---
