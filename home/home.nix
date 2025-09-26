@@ -71,64 +71,6 @@
     };
   };
 
-  # Ensure bash properly initializes the environment before starting Fish
-  # This is critical for SSH and su sessions
-  programs.bash = {
-    enable = true;
-    shellAliases = {
-      # Use the safe wrapper for zellij (defined in zellij.nix)
-      zellij = "$HOME/.local/bin/zellij-safe";
-    };
-    initExtra = ''
-      # Function to set up runtime directory robustly
-      setup_runtime_dir() {
-        local uid=$(id -u)
-
-        # Check if XDG_RUNTIME_DIR is already properly set
-        if [ -n "$XDG_RUNTIME_DIR" ] && [ -w "$XDG_RUNTIME_DIR" ] 2>/dev/null; then
-          return 0
-        fi
-
-        # Try standard locations in order of preference
-        for dir in "/run/user/$uid" "/tmp/runtime-$uid" "$HOME/.cache/runtime-$uid"; do
-          if [ -d "$dir" ] || mkdir -m 700 -p "$dir" 2>/dev/null; then
-            if [ -w "$dir" ]; then
-              export XDG_RUNTIME_DIR="$dir"
-              return 0
-            fi
-          fi
-        done
-
-        # Last resort: use HOME directory cache
-        export XDG_RUNTIME_DIR="$HOME/.cache/runtime-$uid"
-        mkdir -m 700 -p "$XDG_RUNTIME_DIR" 2>/dev/null
-      }
-
-      # Set up runtime directory immediately
-      setup_runtime_dir
-
-      # Ensure local bin is in PATH (for our wrappers)
-      if [ -d "$HOME/.local/bin" ]; then
-        case ":$PATH:" in
-          *":$HOME/.local/bin:"*) ;;
-          *) export PATH="$HOME/.local/bin:$PATH" ;;
-        esac
-      fi
-
-      # If Fish is available and this is an interactive session, switch to Fish
-      # But ensure the environment is properly set up first
-      if [[ $- == *i* ]] && command -v fish >/dev/null 2>&1; then
-        # Source Nix profiles if they exist
-        if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-        fi
-        # Don't exec fish if we're already in fish (prevents infinite loop)
-        if [ -z "$FISH_VERSION" ]; then
-          exec fish
-        fi
-      fi
-    '';
-  };
 
   programs = {
     # Use fish

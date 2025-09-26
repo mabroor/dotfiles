@@ -194,11 +194,6 @@
     zellij = "$HOME/.local/bin/zellij-safe";
   };
 
-  # Also for bash
-  programs.bash.shellAliases = {
-    zellij = "$HOME/.local/bin/zellij-safe";
-  };
-
   # Fish integration - add zellij autostart
   programs.fish.interactiveShellInit = ''
     # Set up runtime directory for Fish sessions
