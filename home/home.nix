@@ -71,14 +71,49 @@
     };
   };
 
+
   programs = {
     # Use fish
     fish = {
       enable = true;
 
+      # This runs for ALL fish instances - critical for SSH/su sessions
+      shellInit = ''
+        # CRITICAL: Load home-manager environment for SSH/su sessions
+        # This MUST run before anything else tries to use Nix packages
+
+        # Check if we're in a minimal environment (SSH/su) that needs PATH setup
+        if not contains "$HOME/.nix-profile/bin" $PATH
+            # Add home-manager managed packages to PATH
+            set -gx PATH "$HOME/.nix-profile/bin" $PATH
+        end
+
+        # Source home-manager session variables if available
+        if test -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+            # Extract and set environment variables from the shell script
+            # We can't source it directly, but we can parse it
+            for line in (bash -c "source $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh && env" 2>/dev/null | string split '\n')
+                set -l kv (string split -m 1 '=' $line)
+                if test (count $kv) -eq 2
+                    # Only set if not already set (preserve existing values)
+                    if not set -q $kv[1]
+                        set -gx $kv[1] $kv[2]
+                    end
+                end
+            end
+        end
+
+        # Ensure all Nix paths are available
+        for p in /run/current-system/sw/bin /nix/var/nix/profiles/default/bin /etc/profiles/per-user/(whoami)/bin
+            if test -d $p; and not contains $p $PATH
+                set -gx PATH $PATH $p
+            end
+        end
+      '';
+
       interactiveShellInit = ''
         set fish_greeting # N/A
-        
+
         # Configure Tide prompt
         if not set -q tide_configured
           tide configure --auto --style=Lean --prompt_colors='True color' --show_time='24-hour format' --lean_prompt_height='Two lines' --prompt_connection=Disconnected --prompt_spacing=Compact --icons='Many icons' --transient=No
