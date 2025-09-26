@@ -4,7 +4,7 @@
 {
   programs.zellij = {
     enable = true;
-    
+
     # Use raw KDL configuration to avoid home-manager's incorrect keybind generation
     settings = {
       theme = "catppuccin-macchiato";
@@ -18,7 +18,7 @@
       simplified_ui = false;
       default_layout = "compact";
       default_mode = "normal";
-      
+
       ui = {
         pane_frames = {
           rounded_corners = true;
@@ -27,7 +27,7 @@
       };
     };
   };
-  
+
   # Override with custom KDL config for keybinds
   xdg.configFile."zellij/config.kdl".text = ''
     theme "catppuccin-macchiato"
@@ -41,14 +41,14 @@
     simplified_ui false
     default_layout "compact"
     default_mode "normal"
-    
+
     ui {
       pane_frames {
         rounded_corners true
         hide_session_name false
       }
     }
-    
+
     keybinds {
       normal {
         // Navigation
@@ -56,12 +56,12 @@
         bind "Alt l" { MoveFocus "Right"; }
         bind "Alt j" { MoveFocus "Down"; }
         bind "Alt k" { MoveFocus "Up"; }
-        
+
         // Pane management
         bind "Alt |" { NewPane "Right"; }
         bind "Alt s" { NewPane "Down"; }
         bind "Alt x" { CloseFocus; }
-        
+
         // Tab management
         bind "Alt t" { NewTab; }
         bind "Alt w" { CloseTab; }
@@ -70,25 +70,25 @@
         bind "Alt 3" { GoToTab 3; }
         bind "Alt 4" { GoToTab 4; }
         bind "Alt 5" { GoToTab 5; }
-        
+
         // Session management
         bind "Alt d" { Detach; }
         bind "Alt f" { ToggleFloatingPanes; }
         bind "Alt m" { ToggleFocusFullscreen; }
-        
+
         // Switch to search mode
         bind "Ctrl s" { SwitchToMode "Search"; }
-        
+
         // Resize mode
         bind "Alt r" { SwitchToMode "Resize"; }
       }
-      
+
       search {
         bind "Enter" { SwitchToMode "Normal"; }
         bind "Esc" { SwitchToMode "Normal"; }
         bind "Ctrl c" { SwitchToMode "Normal"; }
       }
-      
+
       resize {
         bind "h" { Resize "Left"; }
         bind "j" { Resize "Down"; }
@@ -100,7 +100,7 @@
         bind "Esc" { SwitchToMode "Normal"; }
       }
     }
-    
+
     plugins {
       tab-bar { path "tab-bar"; }
       status-bar { path "status-bar"; }
@@ -108,7 +108,7 @@
       compact-bar { path "compact-bar"; }
     }
   '';
-  
+
   # Set environment variables for proper session handling
   home.sessionVariables = {
     # Ensure Zellij uses consistent paths for session management
@@ -120,54 +120,128 @@
   # Ensure the data directory exists for sessions
   home.file."${config.xdg.dataHome}/zellij/.keep".text = "";
 
+  # Create a robust wrapper script for Zellij that handles SSH edge cases
+  home.file.".local/bin/zellij-safe" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+
+      # Robust Zellij wrapper for SSH sessions
+
+      # Function to create runtime directory with proper permissions
+      create_runtime_dir() {
+          local dir="$1"
+          if [ ! -d "$dir" ]; then
+              mkdir -p "$dir" 2>/dev/null || return 1
+          fi
+          chmod 700 "$dir" 2>/dev/null
+          [ -w "$dir" ] && return 0 || return 1
+      }
+
+      # Ensure XDG_RUNTIME_DIR is set and usable
+      if [ -z "$XDG_RUNTIME_DIR" ] || [ ! -w "$XDG_RUNTIME_DIR" ] 2>/dev/null; then
+          uid=$(id -u)
+
+          # Try standard locations in order of preference
+          for candidate in "/run/user/$uid" "/tmp/runtime-$uid" "$HOME/.cache/runtime-$uid"; do
+              if create_runtime_dir "$candidate"; then
+                  export XDG_RUNTIME_DIR="$candidate"
+                  break
+              fi
+          done
+
+          # Last resort: use HOME directory
+          if [ -z "$XDG_RUNTIME_DIR" ] || [ ! -w "$XDG_RUNTIME_DIR" ]; then
+              export XDG_RUNTIME_DIR="$HOME/.cache/runtime-$uid"
+              create_runtime_dir "$XDG_RUNTIME_DIR"
+          fi
+      fi
+
+      # Ensure Zellij directories exist with proper permissions
+      mkdir -p "$XDG_RUNTIME_DIR/zellij" 2>/dev/null
+      chmod 755 "$XDG_RUNTIME_DIR/zellij" 2>/dev/null
+
+      # Clean up stale sockets (important for SSH sessions)
+      # Remove any socket files that are not currently in use
+      if [ -d "$XDG_RUNTIME_DIR/zellij" ]; then
+          # Get Zellij version directory
+          for version_dir in "$XDG_RUNTIME_DIR/zellij"/*; do
+              if [ -d "$version_dir" ]; then
+                  # Check each socket file
+                  for sock in "$version_dir"/*; do
+                      if [ -S "$sock" ]; then
+                          # Try to test if socket is alive using a simple method
+                          # If we can't stat it or it's older than 1 day, remove it
+                          if ! stat "$sock" >/dev/null 2>&1 || [ "$(find "$sock" -mtime +1 2>/dev/null)" ]; then
+                              rm -f "$sock" 2>/dev/null
+                          fi
+                      fi
+                  done
+              fi
+          done
+      fi
+
+      # Set socket directory explicitly
+      export ZELLIJ_SOCKET_DIR="$XDG_RUNTIME_DIR/zellij"
+
+      # Run zellij with the fixed environment
+      exec ${pkgs.zellij}/bin/zellij "$@"
+    '';
+  };
+
+  # Create an alias so 'zellij' uses our safe wrapper
+  programs.fish.shellAliases = {
+    zellij = "$HOME/.local/bin/zellij-safe";
+  };
+
+  # Also for bash
+  programs.bash.shellAliases = {
+    zellij = "$HOME/.local/bin/zellij-safe";
+  };
+
   # Fish integration - add zellij autostart
-  programs.fish.loginShellInit = ''
-    # Ensure Nix environment is loaded (important for SSH and su sessions)
-    # This needs to run early, before interactive shell init
-    if test -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-        # Source home-manager session variables
-        set -l hm_session_vars (bash -c ". $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh && env" 2>/dev/null)
-        for var in $hm_session_vars
-            set -l kv (string split -m 1 "=" $var)
-            if test (count $kv) -eq 2
-                set -gx $kv[1] $kv[2]
+  programs.fish.interactiveShellInit = ''
+    # Set up runtime directory for Fish sessions
+    function setup_runtime_dir
+        set -l uid (id -u)
+
+        # Check if XDG_RUNTIME_DIR is already properly set
+        if test -n "$XDG_RUNTIME_DIR" -a -w "$XDG_RUNTIME_DIR" 2>/dev/null
+            return 0
+        end
+
+        # Try standard locations
+        for dir in "/run/user/$uid" "/tmp/runtime-$uid" "$HOME/.cache/runtime-$uid"
+            if test -d "$dir" -o mkdir -m 700 -p "$dir" 2>/dev/null
+                if test -w "$dir"
+                    set -gx XDG_RUNTIME_DIR "$dir"
+                    return 0
+                end
             end
         end
+
+        # Fallback
+        set -gx XDG_RUNTIME_DIR "$HOME/.cache/runtime-$uid"
+        mkdir -m 700 -p "$XDG_RUNTIME_DIR" 2>/dev/null
     end
 
-    # Ensure user's Nix profile bins are in PATH
-    set -l nix_paths \
-        "$HOME/.nix-profile/bin" \
-        "/nix/var/nix/profiles/default/bin" \
-        "/run/current-system/sw/bin" \
-        "/etc/profiles/per-user/$USER/bin"
+    # Set up runtime directory immediately
+    setup_runtime_dir
 
-    for p in $nix_paths
-        if test -d "$p"
-            fish_add_path -g "$p"
-        end
-    end
-  '';
-
-  programs.fish.interactiveShellInit = ''
-    # Set runtime directory if not set (needed for session management)
-    if test -z "$XDG_RUNTIME_DIR"
-        # Use (id -u) instead of $UID which doesn't exist in Fish
-        set -gx XDG_RUNTIME_DIR "/tmp/zellij-"(id -u)
-        if test -d "$XDG_RUNTIME_DIR"
-            # Fix permissions if needed (in case they were wrong)
-            chmod 700 "$XDG_RUNTIME_DIR" 2>/dev/null
-        else
-            # Create directory with correct permissions
-            mkdir -m 700 -p "$XDG_RUNTIME_DIR" 2>/dev/null
-        end
+    # Add local bin to PATH for our wrapper
+    if test -d "$HOME/.local/bin"
+        fish_add_path -p "$HOME/.local/bin"
     end
 
     # Auto-start zellij in new terminals (but not in existing zellij sessions)
-    # Check if ZELLIJ env var exists and is not empty (it's set to "0" when in a session)
-    # Also check that zellij command is available
-    if status is-interactive && test -z "$ZELLIJ" && command -v zellij >/dev/null 2>&1
-        zellij attach -c
+    if status is-interactive && test -z "$ZELLIJ"
+        # Use our safe wrapper
+        if test -f "$HOME/.local/bin/zellij-safe"
+            "$HOME/.local/bin/zellij-safe" attach -c
+        else if command -v zellij >/dev/null 2>&1
+            # Fallback to regular zellij if wrapper not available yet
+            zellij attach -c
+        end
     end
   '';
 }

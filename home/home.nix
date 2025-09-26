@@ -71,14 +71,107 @@
     };
   };
 
+  # Ensure bash properly initializes the environment before starting Fish
+  # This is critical for SSH and su sessions
+  programs.bash = {
+    enable = true;
+    shellAliases = {
+      # Use the safe wrapper for zellij (defined in zellij.nix)
+      zellij = "$HOME/.local/bin/zellij-safe";
+    };
+    initExtra = ''
+      # Function to set up runtime directory robustly
+      setup_runtime_dir() {
+        local uid=$(id -u)
+
+        # Check if XDG_RUNTIME_DIR is already properly set
+        if [ -n "$XDG_RUNTIME_DIR" ] && [ -w "$XDG_RUNTIME_DIR" ] 2>/dev/null; then
+          return 0
+        fi
+
+        # Try standard locations in order of preference
+        for dir in "/run/user/$uid" "/tmp/runtime-$uid" "$HOME/.cache/runtime-$uid"; do
+          if [ -d "$dir" ] || mkdir -m 700 -p "$dir" 2>/dev/null; then
+            if [ -w "$dir" ]; then
+              export XDG_RUNTIME_DIR="$dir"
+              return 0
+            fi
+          fi
+        done
+
+        # Last resort: use HOME directory cache
+        export XDG_RUNTIME_DIR="$HOME/.cache/runtime-$uid"
+        mkdir -m 700 -p "$XDG_RUNTIME_DIR" 2>/dev/null
+      }
+
+      # Set up runtime directory immediately
+      setup_runtime_dir
+
+      # Ensure local bin is in PATH (for our wrappers)
+      if [ -d "$HOME/.local/bin" ]; then
+        case ":$PATH:" in
+          *":$HOME/.local/bin:"*) ;;
+          *) export PATH="$HOME/.local/bin:$PATH" ;;
+        esac
+      fi
+
+      # If Fish is available and this is an interactive session, switch to Fish
+      # But ensure the environment is properly set up first
+      if [[ $- == *i* ]] && command -v fish >/dev/null 2>&1; then
+        # Source Nix profiles if they exist
+        if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        fi
+        # Don't exec fish if we're already in fish (prevents infinite loop)
+        if [ -z "$FISH_VERSION" ]; then
+          exec fish
+        fi
+      fi
+    '';
+  };
+
   programs = {
     # Use fish
     fish = {
       enable = true;
 
+      # This runs for ALL fish instances - critical for SSH/su sessions
+      shellInit = ''
+        # CRITICAL: Load home-manager environment for SSH/su sessions
+        # This MUST run before anything else tries to use Nix packages
+
+        # Check if we're in a minimal environment (SSH/su) that needs PATH setup
+        if not contains "$HOME/.nix-profile/bin" $PATH
+            # Add home-manager managed packages to PATH
+            set -gx PATH "$HOME/.nix-profile/bin" $PATH
+        end
+
+        # Source home-manager session variables if available
+        if test -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+            # Extract and set environment variables from the shell script
+            # We can't source it directly, but we can parse it
+            for line in (bash -c "source $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh && env" 2>/dev/null | string split '\n')
+                set -l kv (string split -m 1 '=' $line)
+                if test (count $kv) -eq 2
+                    # Only set if not already set (preserve existing values)
+                    if not set -q $kv[1]
+                        set -gx $kv[1] $kv[2]
+                    end
+                end
+            end
+        end
+
+        # Ensure all Nix paths are available
+        for p in /run/current-system/sw/bin /nix/var/nix/profiles/default/bin /etc/profiles/per-user/(whoami)/bin
+            if test -d $p; and not contains $p $PATH
+                set -gx PATH $PATH $p
+            end
+        end
+      '';
+
       interactiveShellInit = ''
         set fish_greeting # N/A
-        
+
         # Configure Tide prompt
         if not set -q tide_configured
           tide configure --auto --style=Lean --prompt_colors='True color' --show_time='24-hour format' --lean_prompt_height='Two lines' --prompt_connection=Disconnected --prompt_spacing=Compact --icons='Many icons' --transient=No
