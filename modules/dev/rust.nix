@@ -30,13 +30,18 @@
     cargo-cross      # Cross-compilation tool
     
     # WebAssembly tools
+    trunk            # Build, bundle and ship Rust WASM applications
     wasm-pack        # Build Rust for the web
     wasmtime         # WebAssembly runtime
     
     # Debugging and profiling
     gdb              # GNU debugger
+    lldb             # LLDB debugger (works with Rust)
     valgrind         # Memory error detector
     heaptrack        # Heap memory profiler
+
+    # Build tools
+    lld              # LLVM linker for faster builds
     
     # Documentation tools
     mdbook           # Create books from markdown
