@@ -241,7 +241,7 @@ jobs:
           fi
 
       - name: Validate Markdown files
-        uses: davidanson/markdownlint-cli2-action@v20
+        uses: davidanson/markdownlint-cli2-action@v21
         with:
           globs: '**/*.md'
 
