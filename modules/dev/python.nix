@@ -4,71 +4,73 @@
 {
   home.packages = with pkgs; [
     # Python interpreters
-    python311        # Python 3.11 (current stable)
+    python313        # Python 3.13 (current stable)
     # python312        # Python 3.12 (latest) - Commented out to avoid version conflict
     pypy3           # PyPy for performance-critical applications
     
     # Package managers and virtual environment tools
-    python311Packages.pip       # Package installer
+    python313Packages.pip       # Package installer
     pipx                         # Install Python apps in isolated environments
     poetry                       # Modern dependency management
-    python311Packages.virtualenv # Virtual environment creator
+    python313Packages.virtualenv # Virtual environment creator
     pipenv                       # Higher-level interface to pip and virtualenv
     
     # Development tools
     black                        # Code formatter
     isort                        # Import sorter
-    python311Packages.flake8    # Linting
+    python313Packages.flake8    # Linting
     mypy                         # Static type checking
     pylint                       # Comprehensive linting
-    python311Packages.autopep8  # PEP 8 formatter
+    python313Packages.autopep8  # PEP 8 formatter
     ruff                        # Fast Python linter (Rust-based)
     
     # Language servers and IDE tools
     pyright                     # Python language server
-    python311Packages.rope      # Refactoring library
-    python311Packages.jedi      # Autocompletion library
+    python313Packages.rope      # Refactoring library
+    python313Packages.jedi      # Autocompletion library
     
     # Testing frameworks
-    python311Packages.pytest   # Testing framework
-    python311Packages.pytest-cov # Coverage plugin for pytest
-    python311Packages.pytest-xdist # Parallel test execution
-    python311Packages.tox       # Test automation
-    python311Packages.coverage # Code coverage measurement
+    python313Packages.pytest   # Testing framework
+    python313Packages.pytest-cov # Coverage plugin for pytest
+    python313Packages.pytest-xdist # Parallel test execution
+    python313Packages.tox       # Test automation
+    python313Packages.coverage # Code coverage measurement
     
     # Documentation tools
-    python311Packages.sphinx   # Documentation generator
-    python311Packages.mkdocs   # Documentation site generator
+    python313Packages.sphinx   # Documentation generator
+    python313Packages.mkdocs   # Documentation site generator
     
     # Debugging and profiling
-    python311Packages.ipdb      # Enhanced debugger with IPython
-    py-spy                       # Sampling profiler
+    python313Packages.ipdb      # Enhanced debugger with IPython
+    # Sampling profiler; its test suite needs ptrace access unavailable in
+    # sandboxed/container builds, so skip checks.
+    (py-spy.overrideAttrs (_: { doCheck = false; }))
     
     # Popular libraries for data science and web development
-    python311Packages.requests # HTTP library
-    python311Packages.fastapi  # Modern web framework
-    python311Packages.flask    # Lightweight web framework
-    python311Packages.django   # Full-featured web framework
-    python311Packages.numpy    # Scientific computing
-    python311Packages.pandas   # Data manipulation
-    python311Packages.matplotlib # Plotting library
-    python311Packages.jupyter  # Interactive computing
-    python311Packages.ipython  # Enhanced interactive Python
+    python313Packages.requests # HTTP library
+    python313Packages.fastapi  # Modern web framework
+    python313Packages.flask    # Lightweight web framework
+    python313Packages.django   # Full-featured web framework
+    python313Packages.numpy    # Scientific computing
+    python313Packages.pandas   # Data manipulation
+    python313Packages.matplotlib # Plotting library
+    python313Packages.jupyter  # Interactive computing
+    python313Packages.ipython  # Enhanced interactive Python
     
     # Database libraries
-    python311Packages.psycopg2 # PostgreSQL adapter
-    python311Packages.pymongo  # MongoDB driver
-    python311Packages.redis    # Redis client
-    python311Packages.sqlalchemy # SQL toolkit and ORM
-    python311Packages.alembic  # Database migration tool
+    python313Packages.psycopg2 # PostgreSQL adapter
+    python313Packages.pymongo  # MongoDB driver
+    python313Packages.redis    # Redis client
+    python313Packages.sqlalchemy # SQL toolkit and ORM
+    python313Packages.alembic  # Database migration tool
     
     # Utilities
-    python311Packages.click    # Command line interface creation
-    python311Packages.rich     # Rich text and beautiful formatting
-    python311Packages.typer    # Modern CLI framework
-    python311Packages.pydantic # Data validation using Python type hints
-    python311Packages.httpx    # HTTP client for Python 3
-    python311Packages.aiohttp  # Async HTTP client/server
+    python313Packages.click    # Command line interface creation
+    python313Packages.rich     # Rich text and beautiful formatting
+    python313Packages.typer    # Modern CLI framework
+    python313Packages.pydantic # Data validation using Python type hints
+    python313Packages.httpx    # HTTP client for Python 3
+    python313Packages.aiohttp  # Async HTTP client/server
   ];
 
   # Shell aliases for Python development

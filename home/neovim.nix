@@ -14,8 +14,8 @@
       nil                    # Nix LSP
       rust-analyzer         # Rust LSP
       gopls                 # Go LSP
-      nodePackages.typescript-language-server  # TypeScript LSP
-      nodePackages.vscode-langservers-extracted  # HTML/CSS/JSON LSP
+      typescript-language-server  # TypeScript LSP
+      vscode-langservers-extracted  # HTML/CSS/JSON LSP
       pyright               # Python LSP
       lua-language-server   # Lua LSP
       marksman             # Markdown LSP
@@ -24,7 +24,7 @@
       nixpkgs-fmt          # Nix formatter
       rustfmt              # Rust formatter
       gofumpt              # Go formatter
-      nodePackages.prettier # Web formatter
+      prettier # Web formatter
       black                # Python formatter
       stylua               # Lua formatter
       
@@ -78,7 +78,7 @@
 
       # Git integration
       gitsigns-nvim
-      fugitive
+      vim-fugitive
       vim-rhubarb
 
       # Status line and UI
@@ -124,9 +124,7 @@
       persistence-nvim
 
       # Language specific
-      rust-tools-nvim
       go-nvim
-      typescript-nvim
     ];
 
     extraLuaConfig = ''

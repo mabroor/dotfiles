@@ -24,19 +24,19 @@
             bun
             
             # Development tools
-            nodePackages.typescript
-            nodePackages.typescript-language-server
-            nodePackages.prettier
-            nodePackages.eslint
-            nodePackages.vscode-langservers-extracted
+            typescript
+            typescript-language-server
+            prettier
+            eslint
+            vscode-langservers-extracted
             
             # Build tools
-            nodePackages.webpack-cli
+            webpack-cli
             
             # Utilities
-            nodePackages.nodemon
-            nodePackages.concurrently
-            nodePackages.npm-check-updates
+            nodemon
+            concurrently
+            npm-check-updates
             
             # System dependencies
             python3  # For native modules
