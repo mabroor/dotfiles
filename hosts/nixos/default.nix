@@ -4,7 +4,7 @@
 {
   # Import modules
   imports = [
-    ../../nixos/fonts.nix  # System-wide font configuration
+    ../../nixos/fonts.nix # System-wide font configuration
   ];
 
   # Boot configuration
@@ -16,7 +16,7 @@
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
   };
-  
+
   fileSystems."/boot" = {
     device = "/dev/disk/by-label/boot";
     fsType = "vfat";

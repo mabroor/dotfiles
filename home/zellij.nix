@@ -228,8 +228,11 @@
         fish_add_path -p "$HOME/.local/bin"
     end
 
-    # Auto-start zellij in new terminals (but not in existing zellij sessions)
-    if status is-interactive && test -z "$ZELLIJ"
+    # Auto-start zellij in new terminals (but not in existing zellij sessions).
+    # The `isatty stdin` guard matters: `status is-interactive` is also true for
+    # `fish -i -c ...`, where zellij has no terminal to put into raw mode and
+    # panics on startup.
+    if status is-interactive && test -z "$ZELLIJ" && isatty stdin
         # Use our safe wrapper
         if test -f "$HOME/.local/bin/zellij-safe"
             "$HOME/.local/bin/zellij-safe" attach -c

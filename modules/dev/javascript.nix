@@ -1,61 +1,23 @@
-# JavaScript/Node.js development environment
-{ config, pkgs, ... }:
+# JavaScript/Node.js development environment.
+#
+# Packages live in the flake's `javascript` devShell:
+#   nix develop github:mabroor/dotfiles#javascript
+{ config, ... }:
 
 {
-  home.packages = with pkgs; [
-    # Node.js runtime and package managers
-    nodejs_22        # Node.js LTS (includes npm)
-    yarn             # Alternative package manager
-    pnpm             # Fast, disk space efficient package manager
-    bun              # Fast all-in-one JavaScript runtime
-    
-    # Development tools
-    typescript              # TypeScript compiler
-    typescript-language-server  # TypeScript LSP
-    vscode-langservers-extracted  # HTML/CSS/JSON LSP
-    prettier               # Code formatter
-    eslint                 # JavaScript linter
-    stylelint              # CSS linter
-
-    # Build tools and bundlers
-    webpack-cli            # Webpack bundler
-
-    # Testing frameworks (install locally per project)
-
-    # Utilities
-    nodemon                # Development file watcher
-    concurrently          # Run multiple commands
-    npm-check-updates      # Check for outdated dependencies
-
-    # Framework CLIs (install globally as needed)
-
-
-
-    # Svelte development
-    svelte-language-server # Svelte LSP
-
-    # Database tools
-    prisma                 # Modern database toolkit
-
-    # Documentation
-    jsdoc                 # JavaScript documentation generator
-
-  ];
-
-  # Shell aliases for JavaScript development
   programs.fish.shellAliases = {
-    # Node.js aliases
+    # npm. `nl` is not aliased — it is POSIX number-lines.
     "ni" = "npm install";
-    "nr" = "npm run";
+    "nrun" = "npm run";
     "ns" = "npm start";
     "nt" = "npm test";
     "nb" = "npm run build";
     "nd" = "npm run dev";
     "nw" = "npm run watch";
-    "nl" = "npm run lint";
+    "nlint" = "npm run lint";
     "nf" = "npm run format";
-    
-    # Yarn aliases
+
+    # Yarn
     "yi" = "yarn install";
     "yr" = "yarn run";
     "ys" = "yarn start";
@@ -68,10 +30,10 @@
     "ya" = "yarn add";
     "yad" = "yarn add --dev";
     "yrm" = "yarn remove";
-    
-    # pnpm aliases
+
+    # pnpm. `pr` is not aliased — it is POSIX paginate.
     "pi" = "pnpm install";
-    "pr" = "pnpm run";
+    "prun" = "pnpm run";
     "pstart" = "pnpm start";
     "pt" = "pnpm test";
     "pb" = "pnpm build";
@@ -82,129 +44,23 @@
     "pa" = "pnpm add";
     "pad" = "pnpm add --save-dev";
     "prm" = "pnpm remove";
-    
-    # Utility aliases
+
     "ncu" = "npm-check-updates";
-    "deps-check" = "depcheck";
-    "deps-unused" = "depcheck --unused-devDependencies";
   };
 
-  # Environment variables
   home.sessionVariables = {
-    # Use pnpm as default package manager for some tools
     PNPM_HOME = "${config.home.homeDirectory}/.local/share/pnpm";
-    
-    # Node.js options
-    NODE_OPTIONS = "--max-old-space-size=4096";
-    
-    # npm configuration
-    NPM_CONFIG_INIT_AUTHOR_NAME = "Your Name";
-    NPM_CONFIG_INIT_AUTHOR_EMAIL = "your.email@example.com";
-    NPM_CONFIG_INIT_LICENSE = "MIT";
+
+    # Author identity is derived from the git config rather than hardcoded, so
+    # `npm init` stops stamping "Your Name <your.email@example.com>" into every
+    # new package.json. NODE_OPTIONS is deliberately unset: pinning
+    # --max-old-space-size caps the heap for every Node process, including
+    # builds that would otherwise size themselves up on a large machine.
+    NPM_CONFIG_INIT_AUTHOR_NAME = config.programs.git.settings.user.name;
+    NPM_CONFIG_INIT_AUTHOR_EMAIL = config.programs.git.settings.user.email;
   };
 
-  # Add pnpm to PATH
   home.sessionPath = [
     "${config.home.homeDirectory}/.local/share/pnpm"
   ];
-
-  # Create useful development scripts
-  home.file.".local/bin/js-project-init" = {
-    text = ''
-      #!/usr/bin/env bash
-      # JavaScript project initialization script
-      
-      set -euo pipefail
-      
-      PROJECT_NAME="$1"
-      PROJECT_TYPE="$2" # react, vue, angular, node, or vanilla
-      
-      if [ -z "$PROJECT_NAME" ] || [ -z "$PROJECT_TYPE" ]; then
-          echo "Usage: $0 <project-name> <project-type>"
-          echo "Project types: react, vue, angular, node, vanilla"
-          exit 1
-      fi
-      
-      echo "🚀 Creating $PROJECT_TYPE project: $PROJECT_NAME"
-      
-      case "$PROJECT_TYPE" in
-          "react")
-              npx create-react-app "$PROJECT_NAME" --template typescript
-              ;;
-          "vue")
-              npx @vue/cli create "$PROJECT_NAME" --default
-              ;;
-          "angular")
-              npx @angular/cli new "$PROJECT_NAME" --routing --style=scss
-              ;;
-          "node")
-              mkdir "$PROJECT_NAME"
-              cd "$PROJECT_NAME"
-              npm init -y
-              npm install --save-dev @types/node typescript nodemon
-              echo "console.log('Hello, Node.js!');" > index.js
-              ;;
-          "vanilla")
-              mkdir "$PROJECT_NAME"
-              cd "$PROJECT_NAME"
-              npm init -y
-              mkdir src
-              echo "console.log('Hello, JavaScript!');" > src/index.js
-              echo "<!DOCTYPE html><html><head><title>$PROJECT_NAME</title></head><body><script src=\"src/index.js\"></script></body></html>" > index.html
-              ;;
-          *)
-              echo "❌ Unknown project type: $PROJECT_TYPE"
-              exit 1
-              ;;
-      esac
-      
-      echo "✅ Project $PROJECT_NAME created successfully!"
-      echo "📁 Navigate to the project: cd $PROJECT_NAME"
-    '';
-    executable = true;
-  };
-
-  # Package.json generator script
-  home.file.".local/bin/package-json-gen" = {
-    text = ''
-      #!/usr/bin/env bash
-      # Generate a comprehensive package.json with common scripts
-      
-      set -euo pipefail
-      
-      PROJECT_NAME="$(basename "$PWD")"
-      
-      cat > package.json << EOF
-      {
-        "name": "$PROJECT_NAME",
-        "version": "1.0.0",
-        "description": "",
-        "main": "index.js",
-        "scripts": {
-          "start": "node index.js",
-          "dev": "nodemon index.js",
-          "build": "echo 'Build script not configured'",
-          "test": "jest",
-          "test:watch": "jest --watch",
-          "test:coverage": "jest --coverage",
-          "lint": "eslint .",
-          "lint:fix": "eslint . --fix",
-          "format": "prettier --write .",
-          "format:check": "prettier --check .",
-          "type-check": "tsc --noEmit",
-          "clean": "rm -rf dist build node_modules/.cache",
-          "deps:update": "npm-check-updates -u",
-          "deps:check": "npm audit"
-        },
-        "keywords": [],
-        "author": "",
-        "license": "MIT"
-      }
-      EOF
-      
-      echo "✅ Generated package.json with common scripts"
-      echo "📝 Don't forget to update the description, author, and keywords"
-    '';
-    executable = true;
-  };
 }

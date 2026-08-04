@@ -11,40 +11,40 @@
     # LSP servers and language tools
     extraPackages = with pkgs; [
       # LSP servers
-      nil                    # Nix LSP
-      rust-analyzer         # Rust LSP
-      gopls                 # Go LSP
-      typescript-language-server  # TypeScript LSP
-      vscode-langservers-extracted  # HTML/CSS/JSON LSP
-      pyright               # Python LSP
-      lua-language-server   # Lua LSP
-      marksman             # Markdown LSP
-      
+      nil # Nix LSP
+      rust-analyzer # Rust LSP
+      gopls # Go LSP
+      typescript-language-server # TypeScript LSP
+      vscode-langservers-extracted # HTML/CSS/JSON LSP
+      pyright # Python LSP
+      lua-language-server # Lua LSP
+      marksman # Markdown LSP
+
       # Formatters
-      nixpkgs-fmt          # Nix formatter
-      rustfmt              # Rust formatter
-      gofumpt              # Go formatter
+      nixpkgs-fmt # Nix formatter
+      rustfmt # Rust formatter
+      gofumpt # Go formatter
       prettier # Web formatter
-      black                # Python formatter
-      stylua               # Lua formatter
-      
+      black # Python formatter
+      stylua # Lua formatter
+
       # Linters  
-      statix               # Nix linter
-      deadnix              # Dead Nix code finder
-      golangci-lint        # Go linter
-      ruff                 # Python linter
-      
+      statix # Nix linter
+      deadnix # Dead Nix code finder
+      golangci-lint # Go linter
+      ruff # Python linter
+
       # Tree-sitter (for better syntax highlighting)
       tree-sitter
-      
+
       # Debugging
-      delve                # Go debugger
-      
+      delve # Go debugger
+
       # Other tools
-      ripgrep              # For telescope
-      fd                   # For telescope
-      nodejs               # For some plugins
-      git                  # For git integration
+      ripgrep # For telescope
+      fd # For telescope
+      nodejs # For some plugins
+      git # For git integration
     ];
 
     plugins = with pkgs.vimPlugins; [

@@ -8,12 +8,6 @@
       pkgs.home-manager
     ];
 
-  # Use a custom configuration.nix location.
-  # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
-  environment.darwinConfig = "$HOME/dotfiles";
-
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
   nix = {
     package = pkgs.nix;
     settings = {
@@ -24,7 +18,7 @@
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs = {
     gnupg.agent.enable = true;
-    zsh.enable = true;  # default shell on catalina
+    zsh.enable = true; # default shell on catalina
   };
 
   # Used for backwards compatibility, please read the changelog before changing.
@@ -32,62 +26,10 @@
   system.stateVersion = 4;
 
   fonts = {
-    fontDir.enable = true;
-    
-    # Note: macOS automatically registers fonts when fontDir.enable = true
-    # The fonts are symlinked to /Library/Fonts/Nix Fonts/
-    # and are immediately available to all applications
-    
-    fonts = with pkgs; [
-      # Programming fonts - Nerd Fonts
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.fira-code
-      nerd-fonts.hack
-      nerd-fonts.sauce-code-pro
-      nerd-fonts.ubuntu-mono
-      nerd-fonts.meslo-lg
-      nerd-fonts.inconsolata
-      nerd-fonts.dejavu-sans-mono
-      nerd-fonts.droid-sans-mono
-      nerd-fonts.space-mono
-      
-      # Programming fonts - Regular (only those without Nerd Font variants)
-      monaspace  # No Nerd Font variant available
-      fira-code-symbols  # Symbols package, complements Nerd Font
-      cascadia-code  # No Nerd Font variant available
-      fantasque-sans-mono  # No Nerd Font variant available
-      victor-mono  # No Nerd Font variant available
-      
-      # System and design fonts
-      atkinson-hyperlegible
-      inter
-      roboto
-      roboto-mono
-      roboto-slab
-      open-sans
-      liberation_ttf
-      eb-garamond
-      gentium
-      lato
-      montserrat
-      source-sans-pro
-      source-serif-pro
-      work-sans
-      
-      # Google Fonts collection
-      google-fonts
-      
-      # Iconic and symbol fonts
-      font-awesome
-      material-design-icons
-      
-      # Note: Apple system fonts (SF Pro, SF Mono, etc.) are already available
-      # on macOS and don't need to be installed via Nix
-    ];
-  };
-
-  services = {
-
+    # macOS registers these automatically; they are symlinked into
+    # /Library/Fonts/Nix Fonts/ and become available to all applications.
+    # Apple's own system fonts (SF Pro, SF Mono) ship with macOS.
+    packages = (import ../lib/fonts.nix { inherit pkgs; }).darwin;
   };
 
   homebrew = {
@@ -107,7 +49,7 @@
     ];
 
     masApps = {
-      "Macfamilytree-10"  = 1567970985;
+      "Macfamilytree-10" = 1567970985;
       "Tailscale" = 1475387142;
       "Amphetamine" = 937984704;
     };
@@ -131,52 +73,51 @@
       expose-animation-duration = 0.1;
       expose-group-apps = true;
       dashboard-in-overlay = false;
-      disable-dashboard = true;
-      wvous-bl-corner = 1;  # Bottom-left corner: disabled
-      wvous-br-corner = 1;  # Bottom-right corner: disabled
-      wvous-tl-corner = 2;  # Top-left corner: Mission Control
-      wvous-tr-corner = 4;  # Top-right corner: Desktop
+      wvous-bl-corner = 1; # Bottom-left corner: disabled
+      wvous-br-corner = 1; # Bottom-right corner: disabled
+      wvous-tl-corner = 2; # Top-left corner: Mission Control
+      wvous-tr-corner = 4; # Top-right corner: Desktop
     };
 
     # Finder configuration
     finder = {
       AppleShowAllExtensions = true;
       AppleShowAllFiles = false;
-      CreateDesktop = false;  # Don't show icons on desktop
-      FXDefaultSearchScope = "SCcf";  # Search current folder by default
+      CreateDesktop = false; # Don't show icons on desktop
+      FXDefaultSearchScope = "SCcf"; # Search current folder by default
       FXEnableExtensionChangeWarning = false;
-      FXPreferredViewStyle = "Nlsv";  # List view by default
-      QuitMenuItem = true;  # Allow quitting Finder
+      FXPreferredViewStyle = "Nlsv"; # List view by default
+      QuitMenuItem = true; # Allow quitting Finder
       ShowPathbar = true;
       ShowStatusBar = true;
-      _FXShowPosixPathInTitle = true;  # Show full path in title
-      _FXSortFoldersFirst = true;  # Sort folders first
+      _FXShowPosixPathInTitle = true; # Show full path in title
+      _FXSortFoldersFirst = true; # Sort folders first
     };
 
     # Global system settings
     NSGlobalDomain = {
       # Appearance
-      AppleInterfaceStyle = "Dark";  # Dark mode
+      AppleInterfaceStyle = "Dark"; # Dark mode
       AppleInterfaceStyleSwitchesAutomatically = false;
-      
+
       # Keyboard and input
-      ApplePressAndHoldEnabled = false;  # Disable press-and-hold for keys
-      InitialKeyRepeat = 15;  # Fast initial key repeat
-      KeyRepeat = 2;  # Fast key repeat
-      AppleKeyboardUIMode = 3;  # Enable full keyboard access
-      
+      ApplePressAndHoldEnabled = false; # Disable press-and-hold for keys
+      InitialKeyRepeat = 15; # Fast initial key repeat
+      KeyRepeat = 2; # Fast key repeat
+      AppleKeyboardUIMode = 3; # Enable full keyboard access
+
       # Mouse and trackpad
       AppleEnableSwipeNavigateWithScrolls = true;
       AppleEnableMouseSwipeNavigateWithScrolls = true;
-      
+
       # Measurements and formats
       AppleMeasurementUnits = "Centimeters";
       AppleMetricUnits = 1;
       AppleTemperatureUnit = "Celsius";
-      
+
       # Interface behavior
       AppleShowAllExtensions = true;
-      AppleScrollerPagingBehavior = true;  # Jump to spot clicked on scroll bar
+      AppleScrollerPagingBehavior = true; # Jump to spot clicked on scroll bar
       NSAutomaticCapitalizationEnabled = false;
       NSAutomaticDashSubstitutionEnabled = false;
       NSAutomaticPeriodSubstitutionEnabled = false;
@@ -184,18 +125,15 @@
       NSAutomaticSpellingCorrectionEnabled = false;
       NSDisableAutomaticTermination = true;
       NSDocumentSaveNewDocumentsToCloud = false;
-      NSNavPanelExpandedStateForSaveMode = true;  # Expand save panel by default
+      NSNavPanelExpandedStateForSaveMode = true; # Expand save panel by default
       NSNavPanelExpandedStateForSaveMode2 = true;
-      PMPrintingExpandedStateForPrint = true;  # Expand print panel by default
+      PMPrintingExpandedStateForPrint = true; # Expand print panel by default
       PMPrintingExpandedStateForPrint2 = true;
-      
+
       # Window management
-      NSWindowResizeTime = 0.001;  # Fast window resize
-      NSUseAnimatedFocusRing = false;  # Disable focus ring animation
-      
-      # Menu and toolbar
-      AppleReduceDesktopTinting = true;
-      NSToolbarTitleViewRolloverDelay = 0;
+      NSWindowResizeTime = 0.001; # Fast window resize
+      NSUseAnimatedFocusRing = false; # Disable focus ring animation
+
     };
 
     # Login window settings
@@ -204,7 +142,7 @@
       GuestEnabled = false;
       PowerOffDisabledWhileLoggedIn = true;
       RestartDisabledWhileLoggedIn = true;
-      SHOWFULLNAME = false;  # Show username/password fields instead of user list
+      SHOWFULLNAME = false; # Show username/password fields instead of user list
       ShutDownDisabledWhileLoggedIn = true;
     };
 
@@ -217,30 +155,41 @@
     };
 
     # Menu bar settings
-    menuExtraClockAnalog = false;
+    menuExtraClock.IsAnalog = false;
 
     # Trackpad settings
     trackpad = {
-      Clicking = true;  # Tap to click
-      TrackpadRightClick = true;  # Two-finger right click
-      TrackpadThreeFingerDrag = false;  # Three-finger drag disabled
-      ActuationStrength = 1;  # Silent clicking
-      FirstClickThreshold = 1;  # Light touch
-      SecondClickThreshold = 1;  # Light touch
+      Clicking = true; # Tap to click
+      TrackpadRightClick = true; # Two-finger right click
+      TrackpadThreeFingerDrag = false; # Three-finger drag disabled
+      ActuationStrength = 1; # Silent clicking
+      FirstClickThreshold = 1; # Light touch
+      SecondClickThreshold = 1; # Light touch
     };
 
     # Mouse settings
-    ".GlobalPreferences"."com.apple.mouse.scaling" = 2.5;  # Mouse speed
-    
+    ".GlobalPreferences"."com.apple.mouse.scaling" = 2.5; # Mouse speed
+
     # Custom user defaults for specific applications
     CustomUserPreferences = {
+      # nix-darwin dropped its typed options for these, so they are written
+      # to the defaults domains directly.
+      NSGlobalDomain = {
+        AppleReduceDesktopTinting = true;
+        NSToolbarTitleViewRolloverDelay = 0;
+      };
+
+      "com.apple.universalaccess" = {
+        HIDScrollZoomModifierMask = 262144; # Ctrl key for zoom
+      };
+
       # Activity Monitor
       "com.apple.ActivityMonitor" = {
-        IconType = 5;  # CPU Usage
+        IconType = 5; # CPU Usage
         SortColumn = "CPUUsage";
         SortDirection = 0;
-        ShowCategory = 1;  # All Processes
-        UpdatePeriod = 2;  # Update every 2 seconds
+        ShowCategory = 1; # All Processes
+        UpdatePeriod = 2; # Update every 2 seconds
       };
 
       # Archive Utility
@@ -256,9 +205,9 @@
 
       # TextEdit
       "com.apple.TextEdit" = {
-        RichText = false;  # Plain text mode by default
-        PlainTextEncoding = 4;  # UTF-8
-        PlainTextEncodingForWrite = 4;  # UTF-8
+        RichText = false; # Plain text mode by default
+        PlainTextEncoding = 4; # UTF-8
+        PlainTextEncodingForWrite = 4; # UTF-8
       };
 
       # Time Machine
@@ -275,9 +224,9 @@
         ShowFavoritesBar = false;
         ShowSideBar = false;
         HomePage = "about:blank";
-        NewTabBehavior = 1;  # New tab opens with homepage
-        NewWindowBehavior = 1;  # New window opens with homepage
-        TabCreationPolicy = 2;  # New tabs open at end of tab bar
+        NewTabBehavior = 1; # New tab opens with homepage
+        NewWindowBehavior = 1; # New window opens with homepage
+        TabCreationPolicy = 2; # New tabs open at end of tab bar
       };
 
       # Console
@@ -311,7 +260,6 @@
     # Universal Access
     universalaccess = {
       closeViewScrollWheelToggle = true;
-      HIDScrollZoomModifierMask = 262144;  # Ctrl key for zoom
       mouseDriverCursorSize = 1.0;
       reduceMotion = false;
       reduceTransparency = false;
@@ -319,21 +267,23 @@
 
     # Spaces and Mission Control
     spaces = {
-      spans-displays = false;  # Don't span spaces across displays
+      spans-displays = false; # Don't span spaces across displays
     };
 
     # LaunchServices (file associations)
     LaunchServices = {
-      LSQuarantine = false;  # Disable quarantine for downloaded applications
+      LSQuarantine = false; # Disable quarantine for downloaded applications
     };
 
-    # Firewall
-    alf = {
-      allowdownloadsignedenabled = 1;
-      allowsignedenabled = 1;
-      globalstate = 1;  # Enable firewall
-      loggingenabled = 0;
-      stealthenabled = 1;  # Enable stealth mode
-    };
+  };
+
+  # Firewall. nix-darwin replaced the raw system.defaults.alf keys with these
+  # typed options; the old ones silently stopped taking effect.
+  networking.applicationFirewall = {
+    enable = true;
+    allowSigned = true;
+    allowSignedApp = true;
+    blockAllIncoming = false;
+    enableStealthMode = true;
   };
 }

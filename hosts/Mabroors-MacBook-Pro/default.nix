@@ -9,7 +9,7 @@
 
   # Host-specific settings
   networking.hostName = "Mabroors-MacBook-Pro";
-  
+
   # Intel Mac specific packages or configurations can go here
   environment.systemPackages = with pkgs; [
     # Add any Intel Mac specific packages here

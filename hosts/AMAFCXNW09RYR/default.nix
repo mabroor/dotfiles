@@ -9,7 +9,7 @@
 
   # Host-specific settings
   networking.hostName = "AMAFCXNW09RYR";
-  
+
   # Apple Silicon specific packages or configurations can go here
   environment.systemPackages = with pkgs; [
     # Add any Apple Silicon specific packages here

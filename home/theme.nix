@@ -4,40 +4,40 @@
 let
   # Catppuccin Macchiato color scheme
   colors = {
-    base = "#24273a";      # Background
-    mantle = "#1e2030";    # Darker background
-    surface0 = "#363a4f";  # Surface
-    surface1 = "#494d64";  # Surface 1
-    surface2 = "#5b6078";  # Surface 2
-    overlay0 = "#6e738d";  # Overlay 0
-    overlay1 = "#8087a2";  # Overlay 1
-    overlay2 = "#939ab7";  # Overlay 2
-    subtext0 = "#a5adcb";  # Subtext 0  
-    subtext1 = "#b7bdf8";  # Subtext 1
-    text = "#cad3f5";      # Text
-    
+    base = "#24273a"; # Background
+    mantle = "#1e2030"; # Darker background
+    surface0 = "#363a4f"; # Surface
+    surface1 = "#494d64"; # Surface 1
+    surface2 = "#5b6078"; # Surface 2
+    overlay0 = "#6e738d"; # Overlay 0
+    overlay1 = "#8087a2"; # Overlay 1
+    overlay2 = "#939ab7"; # Overlay 2
+    subtext0 = "#a5adcb"; # Subtext 0  
+    subtext1 = "#b7bdf8"; # Subtext 1
+    text = "#cad3f5"; # Text
+
     # Accent colors
     rosewater = "#f4dbd6"; # Rosewater
-    flamingo = "#f0c6c6";  # Flamingo
-    pink = "#f5bde6";      # Pink
-    mauve = "#c6a0f6";     # Mauve
-    red = "#ed8796";       # Red
-    maroon = "#ee99a0";    # Maroon
-    peach = "#f5a97f";     # Peach
-    yellow = "#eed49f";    # Yellow
-    green = "#a6da95";     # Green
-    teal = "#8bd5ca";      # Teal
-    sky = "#91d7e3";       # Sky
-    sapphire = "#7dc4e4";  # Sapphire
-    blue = "#8aadf4";      # Blue
-    lavender = "#b7bdf8";  # Lavender
+    flamingo = "#f0c6c6"; # Flamingo
+    pink = "#f5bde6"; # Pink
+    mauve = "#c6a0f6"; # Mauve
+    red = "#ed8796"; # Red
+    maroon = "#ee99a0"; # Maroon
+    peach = "#f5a97f"; # Peach
+    yellow = "#eed49f"; # Yellow
+    green = "#a6da95"; # Green
+    teal = "#8bd5ca"; # Teal
+    sky = "#91d7e3"; # Sky
+    sapphire = "#7dc4e4"; # Sapphire
+    blue = "#8aadf4"; # Blue
+    lavender = "#b7bdf8"; # Lavender
   };
 in
 {
   # GTK theming (for Linux applications on macOS via XQuartz)
   gtk = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
-    
+
     theme = {
       name = "Catppuccin-Macchiato-Standard-Blue-Dark";
       package = pkgs.catppuccin-gtk.override {
@@ -47,18 +47,18 @@ in
         variant = "macchiato";
       };
     };
-    
+
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
-    
+
     cursorTheme = {
       name = "Bibata-Modern-Classic";
       package = pkgs.bibata-cursors;
       size = 24;
     };
-    
+
     font = {
       name = "SF Pro Text";
       size = 11;
@@ -68,7 +68,7 @@ in
   # Qt theming
   qt = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
-    platformTheme.name = "gtk";
+    platformTheme.name = "gtk3";
   };
 
   # Terminal color schemes
@@ -80,17 +80,17 @@ in
         dim_foreground = colors.subtext1;
         bright_foreground = colors.text;
       };
-      
+
       cursor = {
         text = colors.base;
         cursor = colors.rosewater;
       };
-      
+
       vi_mode_cursor = {
         text = colors.base;
         cursor = colors.lavender;
       };
-      
+
       search = {
         matches = {
           foreground = colors.base;
@@ -105,7 +105,7 @@ in
           background = colors.surface0;
         };
       };
-      
+
       hints = {
         start = {
           foreground = colors.base;
@@ -116,45 +116,45 @@ in
           background = colors.subtext0;
         };
       };
-      
+
       selection = {
         text = colors.base;
         background = colors.rosewater;
       };
-      
+
       normal = {
         black = colors.surface1;
-        red = colors.red;
-        green = colors.green;
-        yellow = colors.yellow;
-        blue = colors.blue;
+        inherit (colors) red;
+        inherit (colors) green;
+        inherit (colors) yellow;
+        inherit (colors) blue;
         magenta = colors.pink;
         cyan = colors.teal;
         white = colors.subtext1;
       };
-      
+
       bright = {
         black = colors.surface2;
-        red = colors.red;
-        green = colors.green;
-        yellow = colors.yellow;
-        blue = colors.blue;
+        inherit (colors) red;
+        inherit (colors) green;
+        inherit (colors) yellow;
+        inherit (colors) blue;
         magenta = colors.pink;
         cyan = colors.teal;
         white = colors.subtext0;
       };
-      
+
       dim = {
         black = colors.surface1;
-        red = colors.red;
-        green = colors.green;
-        yellow = colors.yellow;
-        blue = colors.blue;
+        inherit (colors) red;
+        inherit (colors) green;
+        inherit (colors) yellow;
+        inherit (colors) blue;
         magenta = colors.pink;
         cyan = colors.teal;
         white = colors.subtext1;
       };
-      
+
       indexed_colors = [
         { index = 16; color = colors.peach; }
         { index = 17; color = colors.rosewater; }
@@ -169,32 +169,32 @@ in
     background = colors.base;
     selection_foreground = colors.text;
     selection_background = colors.surface2;
-    
+
     cursor = colors.rosewater;
     cursor_text_color = colors.base;
-    
+
     url_color = colors.blue;
-    
+
     active_border_color = colors.lavender;
     inactive_border_color = colors.overlay0;
     bell_border_color = colors.yellow;
-    
+
     wayland_titlebar_color = colors.base;
     macos_titlebar_color = colors.base;
-    
+
     active_tab_background = colors.mauve;
     active_tab_foreground = colors.base;
     inactive_tab_background = colors.surface0;
     inactive_tab_foreground = colors.subtext1;
     tab_bar_background = colors.base;
-    
+
     mark1_background = colors.lavender;
     mark1_foreground = colors.base;
     mark2_background = colors.mauve;
     mark2_foreground = colors.base;
     mark3_background = colors.sapphire;
     mark3_foreground = colors.base;
-    
+
     # Normal colors
     color0 = colors.surface1;
     color1 = colors.red;
@@ -204,7 +204,7 @@ in
     color5 = colors.pink;
     color6 = colors.teal;
     color7 = colors.subtext1;
-    
+
     # Bright colors
     color8 = colors.surface2;
     color9 = colors.red;
@@ -214,7 +214,7 @@ in
     color13 = colors.pink;
     color14 = colors.teal;
     color15 = colors.subtext0;
-    
+
     # Extended colors
     color16 = colors.peach;
     color17 = colors.rosewater;
@@ -238,7 +238,7 @@ in
       ".yml" = "01;33";
       ".toml" = "01;33";
       ".xml" = "01;33";
-      
+
       # Source code
       ".c" = "01;36";
       ".cpp" = "01;36";
@@ -254,14 +254,14 @@ in
       ".css" = "01;35";
       ".scss" = "01;35";
       ".nix" = "01;34";
-      
+
       # Archives
       ".tar" = "01;31";
       ".tgz" = "01;31";
       ".zip" = "01;31";
       ".rar" = "01;31";
       ".7z" = "01;31";
-      
+
       # Images  
       ".jpg" = "01;35";
       ".jpeg" = "01;35";
@@ -269,14 +269,14 @@ in
       ".gif" = "01;35";
       ".svg" = "01;35";
       ".webp" = "01;35";
-      
+
       # Videos
       ".mp4" = "01;35";
       ".mkv" = "01;35";
       ".avi" = "01;35";
       ".mov" = "01;35";
       ".webm" = "01;35";
-      
+
       # Audio
       ".mp3" = "01;35";
       ".flac" = "01;35";
@@ -298,18 +298,18 @@ in
 
   # FZF colors
   programs.fzf.colors = lib.mkIf config.programs.fzf.enable {
-    "bg+" = "#363a4f";      # Background of current line
-    "bg" = "#24273a";       # Background
-    "spinner" = "#f4dbd6";  # Spinner
-    "hl" = "#ed8796";       # Highlighted substrings
-    "fg" = "#cad3f5";       # Foreground
-    "header" = "#ed8796";   # Header
-    "info" = "#c6a0f6";     # Info
-    "pointer" = "#f4dbd6";  # Pointer
-    "marker" = "#f4dbd6";   # Marker
-    "fg+" = "#cad3f5";      # Foreground of current line
-    "prompt" = "#c6a0f6";   # Prompt
-    "hl+" = "#ed8796";      # Highlighted substrings (current line)
+    "bg+" = "#363a4f"; # Background of current line
+    "bg" = "#24273a"; # Background
+    "spinner" = "#f4dbd6"; # Spinner
+    "hl" = "#ed8796"; # Highlighted substrings
+    "fg" = "#cad3f5"; # Foreground
+    "header" = "#ed8796"; # Header
+    "info" = "#c6a0f6"; # Info
+    "pointer" = "#f4dbd6"; # Pointer
+    "marker" = "#f4dbd6"; # Marker
+    "fg+" = "#cad3f5"; # Foreground of current line
+    "prompt" = "#c6a0f6"; # Prompt
+    "hl+" = "#ed8796"; # Highlighted substrings (current line)
   };
 
   # VSCode theme
