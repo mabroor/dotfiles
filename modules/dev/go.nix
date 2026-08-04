@@ -25,7 +25,7 @@
     protoc-gen-go-grpc # Go gRPC plugin for protobuf compiler
     
     # Database tools
-    migrate          # Database migrations
+    go-migrate       # Database migrations
     sqlc             # Generate Go from SQL
     
     # Web development

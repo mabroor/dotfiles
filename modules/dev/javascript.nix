@@ -4,45 +4,42 @@
 {
   home.packages = with pkgs; [
     # Node.js runtime and package managers
-    nodejs_20        # Node.js LTS (includes npm)
+    nodejs_22        # Node.js LTS (includes npm)
     yarn             # Alternative package manager
     pnpm             # Fast, disk space efficient package manager
     bun              # Fast all-in-one JavaScript runtime
     
     # Development tools
-    nodePackages.typescript              # TypeScript compiler
-    nodePackages.typescript-language-server  # TypeScript LSP
-    nodePackages.vscode-langservers-extracted  # HTML/CSS/JSON LSP
-    nodePackages.prettier               # Code formatter
-    nodePackages.eslint                 # JavaScript linter
-    nodePackages.stylelint              # CSS linter
-    
+    typescript              # TypeScript compiler
+    typescript-language-server  # TypeScript LSP
+    vscode-langservers-extracted  # HTML/CSS/JSON LSP
+    prettier               # Code formatter
+    eslint                 # JavaScript linter
+    stylelint              # CSS linter
+
     # Build tools and bundlers
-    nodePackages.webpack-cli            # Webpack bundler
-    
+    webpack-cli            # Webpack bundler
+
     # Testing frameworks (install locally per project)
-    
+
     # Utilities
-    nodePackages.nodemon                # Development file watcher
-    nodePackages.concurrently          # Run multiple commands
-    nodePackages.npm-check-updates      # Check for outdated dependencies
-    
+    nodemon                # Development file watcher
+    concurrently          # Run multiple commands
+    npm-check-updates      # Check for outdated dependencies
+
     # Framework CLIs (install globally as needed)
-    
-    
-    
+
+
+
     # Svelte development
-    nodePackages.svelte-language-server # Svelte LSP
-    
+    svelte-language-server # Svelte LSP
+
     # Database tools
-    nodePackages.prisma                 # Modern database toolkit
-    
-    # Deployment tools
-    nodePackages.vercel                 # Vercel CLI
-    
+    prisma                 # Modern database toolkit
+
     # Documentation
-    nodePackages.jsdoc                 # JavaScript documentation generator
-    
+    jsdoc                 # JavaScript documentation generator
+
   ];
 
   # Shell aliases for JavaScript development
