@@ -10,9 +10,9 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        
+
         # Node.js version - adjust as needed
-        nodejs = pkgs.nodejs_20;
+        nodejs = pkgs.nodejs_22;
       in
       {
         devShells.default = pkgs.mkShell {
@@ -22,24 +22,24 @@
             yarn
             pnpm
             bun
-            
+
             # Development tools
             typescript
             typescript-language-server
             prettier
             eslint
             vscode-langservers-extracted
-            
+
             # Build tools
             webpack-cli
-            
+
             # Utilities
             nodemon
             concurrently
             npm-check-updates
-            
+
             # System dependencies
-            python3  # For native modules
+            python3 # For native modules
             pkg-config
           ] ++ lib.optionals stdenv.isDarwin [
             darwin.apple_sdk.frameworks.CoreServices
@@ -51,7 +51,7 @@
           NODE_ENV = "development";
           NPM_CONFIG_PREFIX = "$HOME/.npm-global";
           PNPM_HOME = "$HOME/.local/share/pnpm";
-          
+
           shellHook = ''
             export PATH="$HOME/.npm-global/bin:$HOME/.local/share/pnpm:$PATH"
             
@@ -81,21 +81,21 @@
         packages.default = pkgs.buildNpmPackage {
           pname = "javascript-project";
           version = "1.0.0";
-          
+
           src = ./.;
-          
+
           npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Update this
-          
+
           buildPhase = ''
             npm run build
           '';
-          
+
           installPhase = ''
             mkdir -p $out/bin
             cp -r dist/* $out/
             # Add executable script if needed
           '';
-          
+
           meta = with pkgs.lib; {
             description = "A JavaScript project";
             homepage = "https://github.com/user/project";
@@ -108,17 +108,17 @@
         packages.yarn = pkgs.mkYarnPackage {
           pname = "javascript-project-yarn";
           version = "1.0.0";
-          
+
           src = ./.;
-          
+
           buildPhase = ''
             yarn build
           '';
-          
+
           distPhase = ''
             cp -r deps/project/dist $out/
           '';
-          
+
           meta = with pkgs.lib; {
             description = "A JavaScript project built with Yarn";
             license = licenses.mit;

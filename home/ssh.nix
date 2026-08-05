@@ -4,18 +4,18 @@
 {
   programs.ssh = {
     enable = true;
-    
+
     # SSH client configuration
     compression = true;
     controlMaster = "auto";
     controlPath = "~/.ssh/control-%r@%h:%p";
     controlPersist = "10m";
-    
+
     # Security settings
     hashKnownHosts = true;
     forwardAgent = false;
-    
-    
+
+
     # Host configurations
     matchBlocks = {
       # GitHub

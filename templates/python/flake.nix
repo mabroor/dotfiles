@@ -10,13 +10,13 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        
+
         # Python version - adjust as needed
-        python = pkgs.python311;
-        
+        python = pkgs.python313;
+
         # Python packages for development
         pythonPackages = python.pkgs;
-        
+
         # Development dependencies
         devDeps = with pythonPackages; [
           pip
@@ -34,23 +34,23 @@
             python
           ] ++ devDeps ++ (with pkgs; [
             # Development tools
-            poetry        # Package manager
-            black         # Code formatter
-            isort         # Import sorter
-            mypy          # Type checker
-            ruff          # Fast Python linter
-            pyright       # Python language server
-            
+            poetry # Package manager
+            black # Code formatter
+            isort # Import sorter
+            mypy # Type checker
+            ruff # Fast Python linter
+            pyright # Python language server
+
             # System dependencies that Python packages might need
             pkg-config
             zlib
             openssl
             libffi
-            
+
             # Database libraries (if needed)
             postgresql
             sqlite
-            
+
             # Optional: useful utilities
             jq
             curl
@@ -86,7 +86,7 @@
           # Environment variables
           PYTHONDONTWRITEBYTECODE = "1";
           PYTHONUNBUFFERED = "1";
-          PIP_REQUIRE_VIRTUALENV = "0";  # Allow pip in nix shell
+          PIP_REQUIRE_VIRTUALENV = "0"; # Allow pip in nix shell
           PYTHONPATH = "$PWD/src:$PYTHONPATH";
         };
 
@@ -94,36 +94,36 @@
         packages.default = pythonPackages.buildPythonApplication {
           pname = "python-project";
           version = "0.1.0";
-          
+
           src = ./.;
-          
+
           pyproject = true;
-          
+
           build-system = with pythonPackages; [
             poetry-core
           ];
-          
+
           # Dependencies - adjust as needed
           propagatedBuildInputs = with pythonPackages; [
             requests
             click
             # Add your dependencies here
           ];
-          
+
           # Development dependencies for testing
           nativeCheckInputs = with pythonPackages; [
             pytest
             pytest-cov
           ];
-          
+
           # Enable tests
           doCheck = true;
-          
+
           # Test command
           checkPhase = ''
             pytest tests/
           '';
-          
+
           meta = with pkgs.lib; {
             description = "A Python project";
             homepage = "https://github.com/user/project";
@@ -157,29 +157,29 @@
         packages.lib = pythonPackages.buildPythonPackage {
           pname = "python-library";
           version = "0.1.0";
-          
+
           src = ./.;
-          
+
           pyproject = true;
-          
+
           build-system = with pythonPackages; [
             setuptools
             wheel
           ];
-          
+
           propagatedBuildInputs = with pythonPackages; [
             # Library dependencies
           ];
-          
+
           nativeCheckInputs = with pythonPackages; [
             pytest
             pytest-cov
           ];
-          
+
           doCheck = true;
-          
+
           pythonImportsCheck = [ "mypackage" ]; # Replace with actual package name
-          
+
           meta = with pkgs.lib; {
             description = "A Python library";
             license = licenses.mit;

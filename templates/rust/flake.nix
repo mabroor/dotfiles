@@ -17,7 +17,7 @@
           inherit system;
           overlays = [ rust-overlay.overlays.default ];
         };
-        
+
         # Rust toolchain with components
         rustToolchain = pkgs.rust-bin.stable.latest.default.override {
           extensions = [ "rust-src" "rust-analyzer" "clippy" ];
@@ -27,7 +27,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             rustToolchain
-            
+
             # Development tools
             bacon
             cargo-watch
@@ -37,11 +37,11 @@
             cargo-audit
             cargo-nextest
             cargo-flamegraph
-            
+
             # System dependencies (adjust as needed)
             pkg-config
             openssl
-            
+
             # Platform-specific dependencies
           ] ++ lib.optionals stdenv.isDarwin [
             darwin.apple_sdk.frameworks.SystemConfiguration
@@ -72,23 +72,23 @@
         packages.default = pkgs.rustPlatform.buildRustPackage {
           pname = "rust-project";
           version = "0.1.0";
-          
+
           src = ./.;
-          
+
           cargoLock = {
             lockFile = ./Cargo.lock;
           };
-          
+
           buildInputs = with pkgs; [
             openssl
           ] ++ lib.optionals stdenv.isDarwin [
             darwin.apple_sdk.frameworks.SystemConfiguration
           ];
-          
+
           nativeBuildInputs = with pkgs; [
             pkg-config
           ];
-          
+
           meta = with pkgs.lib; {
             description = "A Rust project";
             homepage = "https://github.com/user/project";

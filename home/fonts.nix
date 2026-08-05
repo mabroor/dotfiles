@@ -1,12 +1,20 @@
 # Font configuration for home-manager
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, osConfig ? null, ... }:
 
 let
-  # Detect if we're on NixOS or Darwin (where fonts are managed at system level)
-  # On these systems, fonts should NOT be installed via home-manager
-  systemManagedFonts = pkgs.stdenv.isDarwin || (builtins.pathExists /etc/NIXOS);
-  
-  # For non-NixOS Linux, we need to install fonts via home-manager
+  # Whether the host's system configuration already installs fonts.
+  #
+  # home-manager passes `osConfig` only when it is embedded in a NixOS or
+  # nix-darwin configuration — exactly the cases where darwin/darwin.nix or
+  # nixos/fonts.nix has already installed them system-wide. A standalone
+  # home-manager install gets null, and must provide its own.
+  #
+  # This replaces `builtins.pathExists /etc/NIXOS`, which inspected the
+  # *evaluating* machine rather than the target (so building on a NixOS box for
+  # a non-NixOS target silently skipped fonts) and made evaluation impure.
+  systemManagedFonts = pkgs.stdenv.isDarwin || osConfig != null;
+
+  # For non-NixOS Linux, fonts have to be installed per-user.
   isStandaloneLinux = pkgs.stdenv.isLinux && !systemManagedFonts;
 in
 {
@@ -16,60 +24,18 @@ in
   # - Non-NixOS Linux: Fonts can be installed per-user via home-manager
   # 
   # Only install fonts via home-manager on non-NixOS Linux systems
-  home.packages = with pkgs; lib.optionals isStandaloneLinux [
-    # IMPORTANT: Install Nerd Font versions for powerline support
-    # These include all powerline symbols and icons
-    
-    # Primary Nerd Fonts with powerline symbols
-    nerd-fonts.jetbrains-mono     # JetBrainsMono Nerd Font
-    nerd-fonts.fira-code          # FiraCode Nerd Font
-    nerd-fonts.hack               # Hack Nerd Font
-    nerd-fonts.sauce-code-pro     # SauceCodePro Nerd Font (Source Code Pro)
-    nerd-fonts.ubuntu-mono        # UbuntuMono Nerd Font
-    nerd-fonts.meslo-lg           # MesloLG Nerd Font
-    nerd-fonts.inconsolata        # Inconsolata Nerd Font
-    nerd-fonts.dejavu-sans-mono   # DejaVuSansMono Nerd Font
-    nerd-fonts.droid-sans-mono    # DroidSansMono Nerd Font
-    nerd-fonts.space-mono         # SpaceMono Nerd Font
-    
-    # Regular programming fonts (without powerline)
-    # These are fallbacks if Nerd Font versions aren't recognized
-    monaspace  # GitHub's innovative superfamily of fonts for code
-    fira-code-symbols
-    cascadia-code
-    fantasque-sans-mono
-    victor-mono
-    
-    # System and design fonts
-    atkinson-hyperlegible
-    inter
-    roboto
-    roboto-mono
-    roboto-slab
-    open-sans
-    liberation_ttf
-    eb-garamond
-    gentium
-    lato
-    montserrat
-    source-sans-pro
-    source-serif-pro
-    work-sans
-    
-    # Note: google-fonts package removed due to conflicts with individual font packages
-    # All needed fonts are installed individually above
-    
-    # Icon fonts
-    font-awesome
-    material-design-icons
-  ];
+  # Shared list lives in lib/fonts.nix so the darwin, nixos and home sites
+  # cannot drift apart. The `home` set omits google-fonts, which collides with
+  # the individual font packages when linked into a single user profile.
+  home.packages = lib.optionals isStandaloneLinux
+    (import ../lib/fonts.nix { inherit pkgs; }).home;
 
   # Fontconfig for Linux systems (ensures fonts are properly registered)
   fonts.fontconfig.enable = lib.mkIf isStandaloneLinux true;
-  
+
   # Post-installation activation script for font setup
   home.activation = lib.mkIf isStandaloneLinux {
-    refreshFontCache = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    refreshFontCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       # Refresh font cache after installing fonts
       $DRY_RUN_CMD ${pkgs.fontconfig}/bin/fc-cache -f $VERBOSE_ARG || true
       
@@ -86,7 +52,7 @@ in
       fi
     '';
   };
-  
+
   # Font configuration notes:
   # - On macOS: Fonts MUST be installed via darwin.nix (system-level)
   #   Home-manager cannot properly register fonts with macOS
@@ -117,11 +83,11 @@ in
     italic_font = "auto";
     bold_italic_font = "auto";
     font_size = "14.0";
-    
+
     # Font features
     font_features = "JetBrainsMono-Regular +zero +onum";
     disable_ligatures = "never";
-    
+
     # Adjust line height and letter spacing
     adjust_line_height = 0;
     adjust_column_width = 0;

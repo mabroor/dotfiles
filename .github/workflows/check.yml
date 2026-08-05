@@ -106,7 +106,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        template: [rust, javascript, python]
+        template: [rust, javascript, python, go]
 
     steps:
       - name: Checkout repository

@@ -6,12 +6,14 @@
     # Enable Git Large File Storage support
     lfs.enable = true;
 
-    # User information
-    userName = "Mabroor Ahmed";
-    userEmail = "mabroor@gmail.com";
-
     # Modern Git settings with explanations
-    extraConfig = {
+    settings = {
+      # User information
+      user = {
+        name = "Mabroor Ahmed";
+        email = "mabroor@gmail.com";
+      };
+
       # Use 'main' as the default branch name for new repositories
       # This replaces the outdated 'master' terminology
       init = {
@@ -259,7 +261,7 @@
       mc = "merge --log --no-ff";
       rc = "rebase --continue";
       rs = "rebase --skip";
-      rba = "rebase --abort";  # Changed from 'ra' to avoid conflict
+      rba = "rebase --abort"; # Changed from 'ra' to avoid conflict
       ri = "rebase --interactive";
 
       # Diffing
@@ -272,7 +274,7 @@
       l = "log --graph --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s'";
       la = "log --graph --all --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s'";
       r = "log --graph --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s' -20";
-      ra = "log --graph --all --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s' -20";  # Recent All - shows recent commits from all branches
+      ra = "log --graph --all --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s' -20"; # Recent All - shows recent commits from all branches
 
       # Show current commit
       h = "log --pretty=format:'%C(auto,yellow)%h%C(auto,reset) %C(auto,green)(%ar)%C(auto,reset) %C(auto,bold blue)<%an>%C(auto,reset) %C(auto,red)%d%C(auto,reset) %s' -1";
